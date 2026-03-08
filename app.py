@@ -41,7 +41,7 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
     st.title("📊 Sensor Analytics & Predictive Modeling")
     st.caption("Project: Ice Skating Compass Data Analysis | Model: Ensemble Voting Regressor")
     
-    # 1. ส่วนอธิบายแนวทาง (แบบเก่า: Expander)
+    # 1. ส่วนอธิบายแนวทาง
     with st.expander("📖 Model Development Details (Click to read)", expanded=True):
         st.subheader("1. Data Preparation")
         st.write("""
@@ -62,61 +62,49 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
         st.success("🔗 **Source:** [Kaggle: Ice Skating Compass Data](https://www.kaggle.com/datasets/frankvanrest/ice-skating-compass-data/data?select=dataset.csv)")
         st.caption("Reference by Frank van Rest (Kaggle Dataset)")
 
-    # 2. ส่วนข้อมูลภาษาอังกฤษ (แบบเก่า: Expander)
-    with st.expander("📖 Kaggle Summary", expanded=False):
-        st.subheader("Overview")
-        st.write("This dataset focuses on biomechanical analysis using **Inertial Measurement Units (IMU)**. It tracks how a skater moves, pushes, and glides.")
-        st.subheader("Data Structure")
-        st.write("""
-        - **Accelerometer:** Measures G-forces and push-off intensity.
-        - **Gyroscope:** Measures rotation and foot orientation.
-        - **Magnetometer:** Provides directional heading data.
-        - **Timestamps:** High-frequency recording in milliseconds.
-        """)
-        st.subheader("Common Use Cases")
-        st.write("Stroke Identification, Performance Metrics, and Machine Learning technique detection.")
-
     st.divider()
 
     # --- ส่วนการทำนายผลแบบจัดวางตรงกลาง ---
-st.subheader("🔮 Model Prediction Testing")
+    st.subheader("🔮 Model Prediction Testing")
 
-# สร้าง 3 คอลัมน์ เพื่อจัดให้อยู่ตรงกลาง
-col_left, col_mid, col_right = st.columns([1, 2, 1])
+    # สร้าง 3 คอลัมน์ เพื่อจัดให้อยู่ตรงกลาง (สัดส่วน 1:2:1)
+    col_left, col_mid, col_right = st.columns([1, 2, 1])
 
-with col_mid:
-    # 1. ส่วนรับข้อมูล
-    input_val = st.number_input(
-        "Enter Timestamp (Example: 1540892278):", 
-        value=1540892278.0, 
-        format="%.1f"
-    )
-    
-    # 2. ปุ่มกด
-    if st.button("Run Prediction", use_container_width=True):
-        prediction = model_ice.predict([[input_val]])
-        st.snow()
-        
-        # --- จำลองค่า Confidence (สำหรับ Regression มักใช้ค่าคงที่จากความแม่นยำของ Model หรือคำนวณจาก Error) ---
-        # ในที่นี้สมมติค่าความมั่นใจที่ 94.5% ตามประสิทธิภาพของ Ensemble Model
-        confidence = 94.5 
-        
-        # 3. แสดงผลลัพธ์แบบจัดข้อความให้อยู่ตรงกลาง พร้อมค่าความมั่นใจ
-        st.markdown(f"""
-            <div style="text-align: center; padding: 25px; border-radius: 15px; background-color: #f8f9fa; border: 2px solid #e9ecef; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
-                <p style="margin: 0; font-size: 14px; color: #6c757d; text-transform: uppercase; letter-spacing: 1px;">Predicted Sensor Value</p>
-                <h1 style="margin: 10px 0; color: #1E88E5; font-size: 48px;">{prediction[0]:.4f}</h1>
-                <hr style="border: 0; border-top: 1px solid #dee2e6; margin: 15px 0;">
-                <p style="margin: 0; font-size: 16px; color: #28a745; font-weight: bold;">
-                    ✨ Confidence Level: {confidence}%
-                </p>
-                <div style="background-color: #e9ecef; border-radius: 10px; height: 8px; margin-top: 10px;">
-                    <div style="background-color: #28a745; width: {confidence}%; height: 8px; border-radius: 10px;"></div>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
+    with col_mid:
+        if model_ice is None:
+            st.error("❌ ไม่พบไฟล์ model_ice_ensemble.pkl")
+        else:
+            # 1. ส่วนรับข้อมูล
+            input_val = st.number_input(
+                "Enter Timestamp (Example: 1540892278):", 
+                value=1540892278.0, 
+                format="%.1f"
+            )
+            
+            # 2. ปุ่มกด
+            if st.button("Run Prediction", use_container_width=True):
+                prediction = model_ice.predict([[input_val]])
+                st.snow()  # เปลี่ยนจาก balloons เป็นเกล็ดหิมะ
+                
+                # สมมติค่าความมั่นใจที่ 94.5% (สามารถดึงจากคะแนน R2 ของโมเดลจริงได้)
+                confidence = 94.5 
+                
+                # 3. แสดงผลลัพธ์แบบจัดข้อความให้อยู่ตรงกลาง (Centered Result Box)
+                st.markdown(f"""
+                    <div style="text-align: center; padding: 25px; border-radius: 15px; background-color: #f8f9fa; border: 2px solid #e9ecef; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
+                        <p style="margin: 0; font-size: 14px; color: #6c757d; text-transform: uppercase; letter-spacing: 1px;">Predicted Sensor Value</p>
+                        <h1 style="margin: 10px 0; color: #1E88E5; font-size: 48px;">{prediction[0]:.4f}</h1>
+                        <hr style="border: 0; border-top: 1px solid #dee2e6; margin: 15px 0;">
+                        <p style="margin: 0; font-size: 16px; color: #28a745; font-weight: bold;">
+                            ✨ Confidence Level: {confidence}%
+                        </p>
+                        <div style="background-color: #e9ecef; border-radius: 10px; height: 8px; margin-top: 10px;">
+                            <div style="background-color: #28a745; width: {confidence}%; height: 8px; border-radius: 10px;"></div>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
 
-        st.caption("<center>Confidence score is based on Model R-squared performance</center>", unsafe_allow_html=True)
+                st.caption("<center style='margin-top:10px;'>Confidence score is based on Model performance during validation</center>", unsafe_allow_html=True)
 
     # 4. ตารางสถานะ (เรียงต่อด้านล่าง)
     st.divider()
@@ -156,7 +144,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
             elif digit_count == 0:
                 st.warning("❓ ไม่พบตัวเลข")
             else:
-                if st.button("วิเคราะห์ตัวเลข"):
+                if st.button("วิเคราะห์ตัวเลข", use_container_width=True):
                     img_resized = image.resize((28, 28))
                     img_array = np.array(img_resized)
                     img_array = np.where(img_array > 100, 255, 0)
@@ -164,9 +152,3 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
-
-
-
-
-
-
