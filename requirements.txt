@@ -1,7 +1,5 @@
 streamlit
-pandas
-numpy
-scikit-learn
 tensorflow
+numpy
 Pillow
-joblib
+opencv-python-headless
