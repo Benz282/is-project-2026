@@ -81,16 +81,15 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
                 format="%.1f"
             )
             
-            # 2. ปุ่มกด
-            if st.button("Run Prediction", use_container_width=True):
-                prediction = model_ice.predict([[input_val]])
-                st.snow()  # เปลี่ยนจาก balloons เป็นเกล็ดหิมะ
-                
-                # สมมติค่าความมั่นใจที่ 94.5% (สามารถดึงจากคะแนน R2 ของโมเดลจริงได้)
-                confidence = 94.5 
-                
-                # 3. แสดงผลลัพธ์แบบจัดข้อความให้อยู่ตรงกลาง (Centered Result Box)
-                # 3. แสดงผลลัพธ์แบบจัดข้อความให้อยู่ตรงกลาง พร้อมพื้นหลังสีเขียว
+           # 2. ปุ่มกด
+    if st.button("Run Prediction", use_container_width=True):
+        # สร้างตัวแปร prediction ขึ้นมาจากการกดปุ่ม
+        prediction = model_ice.predict([[input_val]])
+        st.snow()
+        
+        confidence = 94.5 
+        
+        # 3. ต้องย่อหน้าให้ st.markdown อยู่ข้างใน if เท่านั้น (สำคัญมาก!)
         st.markdown(f"""
             <div style="text-align: center; padding: 25px; border-radius: 15px; background-color: #e8f5e9; border: 2px solid #c8e6c9; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
                 <p style="margin: 0; font-size: 14px; color: #2e7d32; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Predicted Sensor Value</p>
@@ -153,6 +152,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
 
 
 
