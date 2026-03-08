@@ -90,19 +90,20 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
                 confidence = 94.5 
                 
                 # 3. แสดงผลลัพธ์แบบจัดข้อความให้อยู่ตรงกลาง (Centered Result Box)
-                st.markdown(f"""
-                    <div style="text-align: center; padding: 25px; border-radius: 15px; background-color: #f8f9fa; border: 2px solid #e9ecef; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
-                        <p style="margin: 0; font-size: 14px; color: #6c757d; text-transform: uppercase; letter-spacing: 1px;">Predicted Sensor Value</p>
-                        <h1 style="margin: 10px 0; color: #1E88E5; font-size: 48px;">{prediction[0]:.4f}</h1>
-                        <hr style="border: 0; border-top: 1px solid #dee2e6; margin: 15px 0;">
-                        <p style="margin: 0; font-size: 16px; color: #28a745; font-weight: bold;">
-                            ✨ Confidence Level: {confidence}%
-                        </p>
-                        <div style="background-color: #e9ecef; border-radius: 10px; height: 8px; margin-top: 10px;">
-                            <div style="background-color: #28a745; width: {confidence}%; height: 8px; border-radius: 10px;"></div>
-                        </div>
-                    </div>
-                """, unsafe_allow_html=True)
+                # 3. แสดงผลลัพธ์แบบจัดข้อความให้อยู่ตรงกลาง พร้อมพื้นหลังสีเขียว
+        st.markdown(f"""
+            <div style="text-align: center; padding: 25px; border-radius: 15px; background-color: #e8f5e9; border: 2px solid #c8e6c9; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
+                <p style="margin: 0; font-size: 14px; color: #2e7d32; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Predicted Sensor Value</p>
+                <h1 style="margin: 10px 0; color: #1b5e20; font-size: 48px;">{prediction[0]:.4f}</h1>
+                <hr style="border: 0; border-top: 1px solid #c8e6c9; margin: 15px 0;">
+                <p style="margin: 0; font-size: 16px; color: #2e7d32; font-weight: bold;">
+                    ✨ Confidence Level: {confidence}%
+                </p>
+                <div style="background-color: #ffffff; border-radius: 10px; height: 8px; margin-top: 10px;">
+                    <div style="background-color: #4caf50; width: {confidence}%; height: 8px; border-radius: 10px;"></div>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
 
                 st.caption("<center style='margin-top:10px;'>Confidence score is based on Model performance during validation</center>", unsafe_allow_html=True)
 
@@ -152,3 +153,4 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
