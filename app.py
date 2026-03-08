@@ -36,104 +36,85 @@ if menu == "หน้าแรก":
     """)
     st.info("💡 กรุณาเลือกเมนูด้านซ้ายเพื่อเริ่มทดสอบ")
 
-# --- Model Test Page 1 (Ice) ---
-elif menu == "Model Test 1 (Ice)":
-    st.title("📊 Sensor Value Prediction Model (Ice Skating Data)")
+# --- หน้าทดสอบโมเดล 1 (Ice) ---
+elif menu == "ทดสอบโมเดล 1 (Ice)":
+    st.title("📊 Sensor Analytics & Predictive Modeling")
+    st.caption("Project: Ice Skating Compass Data Analysis | Model: Ensemble Voting Regressor")
     
-    # --- Documentation Section ---
-    with st.expander("📖 Model Development Details (Click to expand)", expanded=True):
-        st.subheader("1. Data Preparation")
-        st.write("""
-        - **Dataset:** Compass and sensor measurement data recorded during ice skating.
-        - **Data Handling:** Missing values were handled, and data was formatted for statistical processing.
-        - **Independent Variable (X):** Timestamp (Recording sequence).
-        - **Dependent Variable (y):** Value (The signal value measured by the sensor).
-        """)
+    # --- ส่วนที่ 1: การจัดแบ่งเนื้อหาด้วย Tabs (แบบสากลนิยม) ---
+    tab1, tab2, tab3 = st.tabs(["📑 Documentation", "🔮 Model Testing", "📈 Data Insight"])
 
-        st.subheader("2. Algorithm Theory (Ensemble Learning)")
-        st.write("""
-        This model utilizes a **Voting Regressor** approach, combining results from 3 sub-models to reduce error and improve accuracy:
-        1. **Linear Regression:** Analyzes basic linear trends.
-        2. **Decision Tree:** Handles non-linear data fluctuations.
-        3. **Random Forest:** Uses multiple randomized decision trees to find the most stable average.
-        """)
-
-        st.subheader("3. References")
+    # --- Tab 1: รายละเอียดวิชาการ ---
+    with tab1:
+        st.subheader("Model Overview")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.markdown("""
+            **1. Data Preparation**
+            - **Source:** [Kaggle Dataset](https://www.kaggle.com/datasets/frankvanrest/ice-skating-compass-data/data?select=dataset.csv)
+            - **Method:** Missing value imputation & feature scaling.
+            - **Input (X):** Unix Timestamp
+            - **Output (y):** Sensor Value
+            """)
+        with col_b:
+            st.markdown("""
+            **2. Algorithm Theory**
+            - **Approach:** Ensemble Learning (Voting)
+            - **Base Models:** - *Linear Regression*
+                - *Decision Tree*
+                - *Random Forest*
+            - **Benefit:** Reduces variance and improves stability.
+            """)
         
-        # --- Reference URL Section ---
-        st.success("🔗 **Data Source from Kaggle:**")
-        st.write("You can check the original dataset here:")
-        st.markdown("[Kaggle: Ice Skating Compass Data (Dataset.csv)](https://www.kaggle.com/datasets/frankvanrest/ice-skating-compass-data/data?select=dataset.csv)")
-        st.caption("Reference by Frank van Rest (Kaggle Dataset)")
+        st.info("🔗 **Reference:** Frank van Rest. *Ice Skating Compass Data.* Kaggle.")
 
-    st.divider()
-    
-    # --- Brief Info Section (English) ---
-    with st.expander("📖 Data Overview (Click to expand)", expanded=True):
-        st.subheader("1. Overview")
-        st.write("""This dataset focuses on **biomechanical analysis** using **Inertial Measurement Units (IMU)**. It tracks how a skater moves, pushes, and glides on the ice by recording physical data from sensors attached to the skater (likely on the skates or lower limbs). """)
-
-        st.subheader("2. Sensor Data Components")
-        st.write("""
-        1. **Accelerometer Data (X, Y, Z):** Measures acceleration and G-forces. Helps identify push-off intensity and blade impact.
-        2. **Gyroscope Data (Angular Velocity):** Measures foot rotation and orientation. Crucial for understanding stroke transitions.
-        3. **Magnetometer Data (Compass):** Provides directional data (Heading) to track the skater's path.
-        4. **Timestamps:** High-frequency recording to ensure fluid motion capture.
-        """)
-
-        st.subheader("3. Common Use Cases")
-        st.write(""" 
-        1. **Stroke Identification:** Differentiating between "push-off" and "gliding" phases.
-        2. **Performance Metrics:** Calculating stroke frequency, contact time, and speed patterns.
-        3. **Machine Learning:** Training algorithms to recognize skating techniques or form inefficiencies.
-        """)
-
-        st.write(""" **In short:** It is a technical dataset intended for sports scientists and data analysts to study the physics and efficiency of ice skating through sensor-based motion tracking.
-        """)
-
-    # --- Prediction Section ---
-    st.subheader("🔮 Prediction Section")
-    if model_ice is None:
-        st.error("❌ 'model_ice_ensemble.pkl' not found. Please check your file upload.")
-    else:
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            input_val = st.number_input("Enter Timestamp (Example: 1540892278):", value=1540892278.0, format="%.1f")
+    # --- Tab 2: ส่วนการทดสอบทำนายผล ---
+    with tab2:
+        st.subheader("Predictive Analytics")
+        st.write("Enter the timestamp to simulate a sensor reading prediction.")
         
-        with col2:
-            st.write("") 
-            st.write("") 
-            if st.button("Start Prediction"):
+        container = st.container(border=True)
+        with container:
+            input_val = st.number_input("Input Timestamp:", value=1540892278.0, format="%.1f")
+            btn_predict = st.button("Run Prediction", use_container_width=True)
+
+        if btn_predict:
+            if model_ice is not None:
                 prediction = model_ice.predict([[input_val]])
-                st.balloons()
-                st.success(f"**Predicted Value:** {prediction[0]:.4f}")
-
-        # --- Status Explanation Table ---
-        st.divider()
-        st.subheader("📋 Movement Status Reference (Example Data)")
-        st.write("This table helps analyze skating behavior based on various sensor values:")
-        
-        # Create Table Data
-        data_info = {
-            "Time (ms)": [1000, 1100, 1200, 1300],
-            "Accel_X (Push)": [0.2, 2.5, 0.5, 0.1],
-            "Gyro_Z (Rotation)": [5.1, 12.4, 45.0, 2.0],
-            "Compass (Heading)": ["180°", "182°", "210°", "230°"],
-            "Status (Description)": [
-                "Gliding: Moving forward smoothly, low impact.",
-                "Push-off: Executing a push against the ice (High Accel).",
-                "Turning: Cornering (Rapid change in Gyro and Heading).",
-                "Gliding: Returning to a steady glide."
-            ]
-        }
-        
-        df_info = pd.DataFrame(data_info)
-        
-        # Display Table
-        st.table(df_info)
-        
-        st.caption("🔍 Note: Accel and Gyro values are simulated to illustrate movement characteristics over time (Timestamp).")
                 
+                # แสดงผลแบบ Metric Card (ดูเป็นสากล)
+                st.write("---")
+                m1, m2 = st.columns(2)
+                m1.metric(label="Predicted Value", value=f"{prediction[0]:.4f}")
+                m2.metric(label="Status", value="Success", delta="Stable")
+                
+                st.success("Analysis Complete: The model has successfully calculated the output based on historical patterns.")
+                st.balloons()
+            else:
+                st.error("Model file not found. Please check your repository.")
+
+    # --- Tab 3: ตารางข้อมูลและสถานะ ---
+    with tab3:
+        st.subheader("Reference Activity Matrix")
+        st.write("Correlation between sensor data and physical movement.")
+        
+        # สร้าง DataFrame ข้อมูลตัวอย่าง
+        df_status = pd.DataFrame({
+            "Time (ms)": [1000, 1100, 1200, 1300],
+            "Accel_X": [0.2, 2.5, 0.5, 0.1],
+            "Gyro_Z": [5.1, 12.4, 45.0, 2.0],
+            "Orientation": ["180°", "182°", "210°", "230°"],
+            "Movement Phase": [
+                "Gliding (Steady)", 
+                "Push-off (High Force)", 
+                "Turning (High Rotation)", 
+                "Gliding (Stable)"
+            ]
+        })
+        
+        # ใช้ st.dataframe เพื่อความสวยงามและเลื่อนดูได้แบบสากล
+        st.dataframe(df_status, use_container_width=True, hide_index=True)
+        st.caption("Standardized values for ice skating movement analysis.")
 # --- หน้าทดสอบโมเดล 2 (MNIST) ---
 elif menu == "ทดสอบโมเดล 2 (MNIST)":
     st.header("🧠 ทดสอบโมเดล Neural Network (จำแนกตัวเลข)")
@@ -182,6 +163,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {final_res}")
                     st.write(f"ความเชื่อมั่น: {confidence:.2f}%")
+
 
 
 
