@@ -60,7 +60,7 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
         st.caption("Reference by Frank van Rest (Kaggle Dataset)")
 
     # 2. ส่วนข้อมูลภาษาอังกฤษ (แบบเก่า: Expander)
-    with st.expander("📖 ข้อมูลโดยสังเขป (Kaggle Summary)", expanded=False):
+    with st.expander("📖 Kaggle Summary", expanded=False):
         st.subheader("Overview")
         st.write("This dataset focuses on biomechanical analysis using **Inertial Measurement Units (IMU)**. It tracks how a skater moves, pushes, and glides.")
         st.subheader("Data Structure")
@@ -136,3 +136,4 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
