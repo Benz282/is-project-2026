@@ -37,94 +37,104 @@ if menu == "หน้าแรก":
     st.info("💡 กรุณาเลือกเมนูด้านซ้ายเพื่อเริ่มทดสอบ")
 
 # --- หน้าทดสอบโมเดล 1 (Ice) ---
-elif menu == "ทดสอบmoเดล 1 (Ice)":
-    st.title("📊 Sensor Analytics & Predictive Modeling")
-    st.caption("Project: Ice Skating Compass Data Analysis | Model: Ensemble Voting Regressor")
+elif menu == "ทดสอบโมเดล 1 (Ice)":
+    st.title("📊 การพัฒนาโมเดลทำนายค่าเซนเซอร์ (Ice Skating Data)")
+    
+    # --- ส่วนอธิบายเนื้อหา (Documentation) ---
+    with st.expander("📖 รายละเอียดแนวทางการพัฒนาโมเดล (คลิกเพื่ออ่าน)", expanded=True):
+        st.subheader("1. การเตรียมข้อมูล (Data Preparation)")
+        st.write("""
+        - **Dataset:** ข้อมูลจากการวัดค่าเข็มทิศและเซนเซอร์ (Compass Sensor Data) ขณะเคลื่อนที่บนน้ำแข็ง
+        - **การจัดการข้อมูล:** ทำการแทนที่ค่าว่าง (Missing Values) และปรับรูปแบบข้อมูลให้พร้อมสำหรับการประมวลผลทางสถิติ
+        - **ตัวแปรต้น (X):** Timestamp (ลำดับเวลาที่บันทึกข้อมูล)
+        - **ตัวแปรตาม (y):** Value (ค่าสัญญาณที่วัดได้จากเซนเซอร์)
+        """)
 
-    # --- ส่วนที่ 1: การจัดแบ่งเนื้อหาด้วย Tabs (แบบสากล) ---
-    tab1, tab2, tab3 = st.tabs(["📑 Documentation", "🔮 Model Testing", "📈 Data Insight"])
+        st.subheader("2. ทฤษฎีอัลกอริทึม (Ensemble Learning)")
+        st.write("""
+        โมเดลนี้ใช้แนวคิด **Voting Regressor** โดยการรวมผลลัพธ์จาก 3 โมเดลย่อย เพื่อลดความผิดพลาด (Error) และเพิ่มความแม่นยำ:
+        1. **Linear Regression:** วิเคราะห์แนวโน้มเชิงเส้นพื้นฐาน
+        2. **Decision Tree:** จัดการกับความผันผวนของข้อมูลที่ไม่เป็นเส้นตรง
+        3. **Random Forest:** ใช้การสุ่มสร้างต้นไม้ตัดสินใจหลายชุดเพื่อหาค่าเฉลี่ยที่เสถียรที่สุด
+        """)
 
-    # --- Tab 1: รายละเอียดวิชาการและที่มาของข้อมูล ---
-    with tab1:
-        st.subheader("Dataset Overview")
-        st.write("""
-        The **"Ice Skating Compass Data"** dataset (specifically the `dataset.csv` file) provided by **Frank van Rest on Kaggle** is a collection of sensor data used to analyze the movement of ice skaters. It focuses on biomechanical analysis 
-        using **Inertial Measurement Units (IMU)** to track how a skater moves, pushes, and glides.
-        """)
-        
-        col_a, col_b = st.columns(2)
-        with col_a:
-            st.markdown("""
-            **1. Data Structure (dataset.csv)**
-            - **Accelerometer (X, Y, Z):** Measures G-forces to identify push-off intensity and blade impact.
-            - **Gyroscope (Angular Velocity):** Measures rotation/orientation to understand stroke transitions.
-            - **Magnetometer (Compass):** Provides directional data (Heading) to track the skater's path.
-            - **Timestamps:** High-frequency recording (ms) to capture fluid motion accurately.
-            """)
-        with col_b:
-            st.markdown("""
-            **2. Common Use Cases**
-            - **Stroke Identification:** Differentiating between "push-off" and "gliding" phases.
-            - **Performance Metrics:** Calculating stroke frequency, contact time, and speed patterns.
-            - **Machine Learning:** Training algorithms to recognize skating techniques or detect inefficiencies.
-            """)
-        
-        st.divider()
-        st.subheader("Algorithm Theory")
-        st.write("""
-        โมเดลนี้ใช้แนวคิด **Voting Regressor (Ensemble Learning)** โดยการรวมผลลัพธ์จาก 3 โมเดลย่อย เพื่อลด Error และเพิ่มความแม่นยำ:
-        - **Linear Regression:** วิเคราะห์แนวโน้มเชิงเส้นพื้นฐาน
-        - **Decision Tree:** จัดการกับความผันผวนของข้อมูลที่ไม่เป็นเส้นตรง
-        - **Random Forest:** ใช้การสุ่มสร้างต้นไม้ตัดสินใจหลายชุดเพื่อหาค่าเฉลี่ยที่เสถียรที่สุด
-        """)
+        st.subheader("3. แหล่งอ้างอิงข้อมูล (References)")
+        
+        # --- ส่วนใส่ URL อ้างอิง ---
+        st.success("🔗 **แหล่งที่มาข้อมูลจาก Kaggle:**")
+        st.write("คุณสามารถตรวจสอบข้อมูลต้นฉบับได้ที่นี่:")
+        st.markdown("[Kaggle: Ice Skating Compass Data (Dataset.csv)](https://www.kaggle.com/datasets/frankvanrest/ice-skating-compass-data/data?select=dataset.csv)")
+        st.caption("Reference by Frank van Rest (Kaggle Dataset)")
 
-        st.success("🔗 **Reference & Source:**")
-        st.markdown("[Kaggle: Ice Skating Compass Data (Dataset.csv)](https://www.kaggle.com/datasets/frankvanrest/ice-skating-compass-data/data?select=dataset.csv)")
-        st.caption("Reference by Frank van Rest (Kaggle Dataset)")
+    st.divider()
+    # --- ส่วนอธิบายเนื้อหา (Documentation) ---
+    
+    with st.expander("📖 ข้อมูลโดยสังเขป (คลิกเพื่ออ่าน)", expanded=True):
+        st.subheader("1. Overview")
+        st.write("""This dataset focuses on **biomechanical analysis** using **Inertial Measurement Units (IMU)**. It tracks how a skater moves, pushes, and glides on the ice by recording physical data from sensors attached to the skater (likely on the skates or lower limbs). """)
 
-    # --- Tab 2: ส่วนการทดสอบทำนายผล ---
-    with tab2:
-        st.subheader("Predictive Analytics")
-        st.write("ป้อนค่า Timestamp เพื่อจำลองการทำนายค่าสัญญาณเซนเซอร์ (Predictive Sensor Value)")
-        
-        container = st.container(border=True)
-        with container:
-            input_val = st.number_input("Input Timestamp:", value=1540892278.0, format="%.1f")
-            btn_predict = st.button("Run Prediction", use_container_width=True)
+        st.subheader("2. The data typically contains time-series data from various sensors")
+        st.write("""
+        1. **Accelerometer Data (X, Y, Z):** Measures the acceleration and G-forces. This helps identify the intensity of the push-off and the impact of the blade hitting the ice.
+        2. **Gyroscope Data (Angular Velocity):** Measures the rotation and orientation of the foot. It is crucial for understanding the transition between strokes and the angle of the skate.
+        3. **Magnetometer Data (Compass):** Provides directional data (Heading). This allows researchers to track the skater's path around the rink and during turns.
+        4. **Timestamps:** High-frequency recording (often in milliseconds) to ensure the fluid motion of skating is captured accurately.
+        """)
 
-        if btn_predict:
-            if model_ice is not None:
-                prediction = model_ice.predict([[input_val]])
-                st.write("---")
-                m1, m2 = st.columns(2)
-                m1.metric(label="Predicted Value", value=f"{prediction[0]:.4f}")
-                m2.metric(label="Status", value="Success", delta="Stable")
-                st.success("การวิเคราะห์เสร็จสมบูรณ์: โมเดลคำนวณผลลัพธ์ตามรูปแบบข้อมูลย้อนหลังเรียบร้อยแล้ว")
-                st.balloons()
-            else:
-                st.error("ไม่พบไฟล์โมเดล กรุณาตรวจสอบการอัปโหลดไฟล์ .pkl ขึ้น GitHub")
+        st.subheader("3. Common Use Cases")
+        st.write(""" 
+        1. **Stroke Identification:** Differentiating between a "push-off" phase and a "gliding" phase.
+        2. **Performance Metrics:** Calculating stroke frequency, contact time (how long the blade stays on the ice), and speed patterns.
+        3. **Machine Learning:** Training algorithms to automatically recognize skating techniques or detect inefficiencies in a skater's form.
+        """)
 
-    # --- Tab 3: ตารางข้อมูลและสถานะการเคลื่อนที่ ---
-    with tab3:
-        st.subheader("Movement Phase Reference Matrix")
-        st.write("ตารางอธิบายความสัมพันธ์ระหว่างค่าเซนเซอร์และพฤติกรรมการเคลื่อนที่บนน้ำแข็ง")
-        
-        df_status = pd.DataFrame({
+        st.write(""" **In short:** It is a technical dataset intended for sports scientists and data analysts to study the physics and efficiency of ice skating through sensor-based motion tracking.
+        """)
+
+    # --- ส่วนการทำนายผล ---
+    st.subheader("🔮 ส่วนการทดสอบทำนายผล (Prediction)")
+    if model_ice is None:
+        st.error("❌ ไม่พบไฟล์ model_ice_ensemble.pkl กรุณาตรวจสอบการอัปโหลดไฟล์")
+    else:
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            input_val = st.number_input("ป้อนค่า Timestamp (ตัวอย่าง: 1540892278):", value=1540892278.0, format="%.1f")
+        
+        with col2:
+            st.write("") 
+            st.write("") 
+            if st.button("เริ่มการทำนายผล"):
+                prediction = model_ice.predict([[input_val]])
+                st.balloons()
+                st.success(f"**ค่า Value ที่ทำนายได้คือ:** {prediction[0]:.4f}")
+
+    # --- เพิ่มตารางแสดงสถานะด้านล่างการทำนาย ---
+        st.divider()
+        st.subheader("📋 ตารางอธิบายสถานะการเคลื่อนที่ (ตัวอย่างข้อมูล)")
+        st.write("ตารางนี้ช่วยวิเคราะห์พฤติกรรมการเล่นสเก็ตน้ำแข็งจากค่าเซนเซอร์ต่างๆ:")
+        
+        # สร้างข้อมูลตาราง
+        data_info = {
             "Time (ms)": [1000, 1100, 1200, 1300],
-            "Accel_X (แรงถีบ)": [0.2, 2.5, 0.5, 0.1],
-            "Gyro_Z (การหมุน)": [5.1, 12.4, 45.0, 2.0],
-            "Compass (ทิศทาง)": ["180°", "182°", "210°", "230°"],
-            "สถานะ (คำอธิบาย)": [
-                "Gliding: ลื่นไถลไปข้างหน้า แรงกระแทกต่ำ",
-                "Push-off: เริ่มออกแรงถีบ (Accel พุ่งสูง)",
-                "Turning: กำลังเข้าโค้ง (Gyro เปลี่ยนเร็ว)",
-                "Gliding: กลับมาลื่นไถลนิ่งๆ อีกครั้ง"
+            "Accel_X (Push)": [0.2, 2.5, 0.5, 0.1],
+            "Gyro_Z (Rotation)": [5.1, 12.4, 45.0, 2.0],
+            "Compass (Heading)": ["180°", "182°", "210°", "230°"],
+            "Status (Description)": [
+                "Gliding: Moving forward smoothly, low impact.",
+                "Push-off: Executing a push against the ice (High Accel).",
+                "Turning: Cornering (Rapid change in Gyro and Heading).",
+                "Gliding: Returning to a steady glide."
             ]
-        })
+        }
         
-        st.dataframe(df_status, use_container_width=True, hide_index=True)
-        st.caption("Note: This table represents idealized sensor patterns for educational purposes.")
+        df_info = pd.DataFrame(data_info)
+        
+        # Display Table
+        st.table(df_info)
+        
+        st.caption("🔍 Note: Accel and Gyro values are simulated to illustrate movement characteristics over time (Timestamp).")
 # --- หน้าทดสอบโมเดล 2 (MNIST) ---
+
 elif menu == "ทดสอบโมเดล 2 (MNIST)":
     st.header("🧠 ทดสอบโมเดล Neural Network (จำแนกตัวเลข)")
     st.write("⚠️ เงื่อนไข: อัปโหลดรูปภาพที่มี **ตัวเลขเพียงตัวเดียว** (ตัวเลขสีขาว พื้นหลังสีดำ)")
@@ -172,6 +182,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {final_res}")
                     st.write(f"ความเชื่อมั่น: {confidence:.2f}%")
+
 
 
 
