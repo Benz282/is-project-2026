@@ -89,7 +89,7 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
         with col2:
             st.write("")
             st.write("")
-            if st.button("Run Prediction"):
+            if st.button("Run Prediction", use_container_width=True):
                 prediction = model_ice.predict([[input_val]])
                 st.snow()
                 st.markdown(f"""
@@ -145,6 +145,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
 
 
 
