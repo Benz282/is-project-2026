@@ -104,8 +104,8 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
                 </div>
             </div>
         """, unsafe_allow_html=True)
-
-                st.caption("<center style='margin-top:10px;'>Confidence score is based on Model performance during validation</center>", unsafe_allow_html=True)
+        
+        st.caption("<center style='margin-top:10px;'>Confidence score is based on Model performance during validation</center>", unsafe_allow_html=True)
 
     # 4. ตารางสถานะ (เรียงต่อด้านล่าง)
     st.divider()
@@ -153,4 +153,5 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
 
