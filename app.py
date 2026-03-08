@@ -57,15 +57,15 @@ with st.expander("📖 รายละเอียดแนวทางการ
         3. **Random Forest:** ใช้การสุ่มสร้างต้นไม้ตัดสินใจหลายชุดเพื่อหาค่าเฉลี่ยที่เสถียรที่สุด
         """)
     st.subheader("3. แหล่งอ้างอิงข้อมูล (References)")
-        
-        # --- ส่วนใส่ URL อ้างอิง ---
-        st.success("🔗 **แหล่งที่มาข้อมูลจาก Kaggle:**")
-        st.write("คุณสามารถตรวจสอบข้อมูลต้นฉบับได้ที่นี่:")
-        st.markdown("[Kaggle: Ice Skating Compass Data (Dataset.csv)](https://www.kaggle.com/datasets/frankvanrest/ice-skating-compass-data/data?select=dataset.csv)")
-        st.caption("Reference by Frank van Rest (Kaggle Dataset)")
+    
+# --- ส่วนใส่ URL อ้างอิง ---
+st.success("🔗 **แหล่งที่มาข้อมูลจาก Kaggle:**")
+st.write("คุณสามารถตรวจสอบข้อมูลต้นฉบับได้ที่นี่:")
+st.markdown("[Kaggle: Ice Skating Compass Data (Dataset.csv)](https://www.kaggle.com/datasets/frankvanrest/ice-skating-compass-data/data?select=dataset.csv)")
+st.caption("Reference by Frank van Rest (Kaggle Dataset)")
+st.divider()
 
-    st.divider()
-    # --- ส่วนอธิบายเนื้อหา (Documentation) ---
+# --- ส่วนอธิบายเนื้อหา (Documentation) ---
     
     with st.expander("📖 ข้อมูลโดยสังเขป (คลิกเพื่ออ่าน)", expanded=True):
         st.subheader("1. Overview")
@@ -180,6 +180,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {final_res}")
                     st.write(f"ความเชื่อมั่น: {confidence:.2f}%")
+
 
 
 
