@@ -97,7 +97,6 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
                 <p style="margin: 0; font-size: 16px; color: #2e7d32; font-weight: bold;">
                 </p>
                 <div style="background-color: #ffffff; border-radius: 10px; height: 8px; margin-top: 10px;">
-                    <div style="background-color: #4caf50; width: {confidence}%; height: 8px; border-radius: 10px;"></div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -150,6 +149,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
 
 
 
