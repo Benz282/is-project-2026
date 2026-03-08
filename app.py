@@ -155,3 +155,4 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
 
 
+
