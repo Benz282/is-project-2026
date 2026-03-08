@@ -65,8 +65,7 @@ st.markdown("[Kaggle: Ice Skating Compass Data (Dataset.csv)](https://www.kaggle
 st.caption("Reference by Frank van Rest (Kaggle Dataset)")
 st.divider()
 
-# --- ส่วนอธิบายเนื้อหา (Documentation) ---
-    
+# --- ส่วนอธิบายเนื้อหา (Documentation) --- 
     with st.expander("📖 ข้อมูลโดยสังเขป (คลิกเพื่ออ่าน)", expanded=True):
         st.subheader("1. Overview")
         st.write("""This dataset focuses on **biomechanical analysis** using **Inertial Measurement Units (IMU)**. It tracks how a skater moves, pushes, and glides on the ice by recording physical data from sensors attached to the skater (likely on the skates or lower limbs). """)
@@ -180,6 +179,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {final_res}")
                     st.write(f"ความเชื่อมั่น: {confidence:.2f}%")
+
 
 
 
