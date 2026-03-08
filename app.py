@@ -66,26 +66,26 @@ st.caption("Reference by Frank van Rest (Kaggle Dataset)")
 st.divider()
 
 # --- ส่วนอธิบายเนื้อหา (Documentation) --- 
-    with st.expander("📖 ข้อมูลโดยสังเขป (คลิกเพื่ออ่าน)", expanded=True):
-        st.subheader("1. Overview")
-        st.write("""This dataset focuses on **biomechanical analysis** using **Inertial Measurement Units (IMU)**. It tracks how a skater moves, pushes, and glides on the ice by recording physical data from sensors attached to the skater (likely on the skates or lower limbs). """)
+with st.expander("📖 ข้อมูลโดยสังเขป (คลิกเพื่ออ่าน)", expanded=True):
+    st.subheader("1. Overview")
+    st.write("""This dataset focuses on **biomechanical analysis** using **Inertial Measurement Units (IMU)**. It tracks how a skater moves, pushes, and glides on the ice by recording physical data from sensors attached to the skater (likely on the skates or lower limbs). """)
 
-        st.subheader("2. The data typically contains time-series data from various sensors")
-        st.write("""
+    st.subheader("2. The data typically contains time-series data from various sensors")
+    st.write("""
         1. **Accelerometer Data (X, Y, Z):** Measures the acceleration and G-forces. This helps identify the intensity of the push-off and the impact of the blade hitting the ice.
         2. **Gyroscope Data (Angular Velocity):** Measures the rotation and orientation of the foot. It is crucial for understanding the transition between strokes and the angle of the skate.
         3. **Magnetometer Data (Compass):** Provides directional data (Heading). This allows researchers to track the skater's path around the rink and during turns.
         4. **Timestamps:** High-frequency recording (often in milliseconds) to ensure the fluid motion of skating is captured accurately.
         """)
 
-        st.subheader("3. Common Use Cases")
-        st.write(""" 
+     st.subheader("3. Common Use Cases")
+     st.write(""" 
         1. **Stroke Identification:** Differentiating between a "push-off" phase and a "gliding" phase.
         2. **Performance Metrics:** Calculating stroke frequency, contact time (how long the blade stays on the ice), and speed patterns.
         3. **Machine Learning:** Training algorithms to automatically recognize skating techniques or detect inefficiencies in a skater's form.
         """)
 
-        st.write(""" **In short:** It is a technical dataset intended for sports scientists and data analysts to study the physics and efficiency of ice skating through sensor-based motion tracking.
+      st.write(""" **In short:** It is a technical dataset intended for sports scientists and data analysts to study the physics and efficiency of ice skating through sensor-based motion tracking.
         """)
 
     # --- ส่วนการทำนายผล ---
@@ -179,6 +179,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {final_res}")
                     st.write(f"ความเชื่อมั่น: {confidence:.2f}%")
+
 
 
 
