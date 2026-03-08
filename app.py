@@ -38,7 +38,8 @@ if menu == "หน้าแรก":
 
 # --- หน้าทดสอบโมเดล 1 (Ice) ---
 elif menu == "ทดสอบโมเดล 1 (Ice)":
-    st.title("📊 การพัฒนาโมเดลทำนายค่าเซนเซอร์ (Ice Skating Data)")
+    st.title("📊 Sensor Analytics & Predictive Modeling")
+    st.caption("Project: Ice Skating Compass Data Analysis | Model: Ensemble Voting Regressor")
     
     # 1. ส่วนอธิบายแนวทาง (แบบเก่า: Expander)
     with st.expander("📖 รายละเอียดแนวทางการพัฒนาโมเดล (คลิกเพื่ออ่าน)", expanded=True):
@@ -136,4 +137,5 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
 
