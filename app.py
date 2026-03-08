@@ -42,21 +42,23 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
     st.caption("Project: Ice Skating Compass Data Analysis | Model: Ensemble Voting Regressor")
     
     # 1. ส่วนอธิบายแนวทาง (แบบเก่า: Expander)
-    with st.expander("📖 รายละเอียดแนวทางการพัฒนาโมเดล (คลิกเพื่ออ่าน)", expanded=True):
-        st.subheader("1. การเตรียมข้อมูล (Data Preparation)")
+    with st.expander("📖 Model Development Details (Click to read)", expanded=True):
+        st.subheader("1. Data Preparation")
         st.write("""
-        - **Dataset:** ข้อมูลจากการวัดค่าเข็มทิศและเซนเซอร์ (Compass Sensor Data) ขณะเคลื่อนที่บนน้ำแข็ง
-        - **การจัดการข้อมูล:** ทำการแทนที่ค่าว่าง (Missing Values) และปรับรูปแบบข้อมูลให้พร้อมสำหรับการประมวลผล
-        - **ตัวแปรต้น (X):** Timestamp | **ตัวแปรตาม (y):** Value
+        - **Dataset:** Compass and sensor measurement data recorded during ice skating movements.
+        - **Data Management:** Handled missing values and preprocessed the data format for statistical analysis.
+        - **Independent Variable (X):** Timestamp | **Dependent Variable (y):** Value
         """)
 
-        st.subheader("2. ทฤษฎีอัลกอริทึม (Ensemble Learning)")
+        st.subheader("2. Algorithm Theory (Ensemble Learning)")
         st.write("""
-        โมเดลนี้ใช้แนวคิด **Voting Regressor** โดยการรวมผลลัพธ์จาก 3 โมเดลย่อย:
-        1. Linear Regression | 2. Decision Tree | 3. Random Forest
+        This model utilizes the **Voting Regressor** concept by ensemble-averaging the predictions from 3 base models to minimize error and maximize accuracy:
+        1. **Linear Regression:** Captures the basic linear relationship.
+        2. **Decision Tree:** Manages non-linear fluctuations in the data.
+        3. **Random Forest:** Aggregates multiple decision trees for a more stable and robust prediction.
         """)
 
-        st.subheader("3. แหล่งอ้างอิงข้อมูล (References)")
+        st.subheader("3. Data References")
         st.success("🔗 **Source:** [Kaggle: Ice Skating Compass Data](https://www.kaggle.com/datasets/frankvanrest/ice-skating-compass-data/data?select=dataset.csv)")
         st.caption("Reference by Frank van Rest (Kaggle Dataset)")
 
@@ -77,34 +79,35 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
     st.divider()
 
     # 3. ส่วนการทำนายผล
-    st.subheader("🔮 ส่วนการทดสอบทำนายผล (Prediction)")
+    st.subheader("🔮 Model Prediction Testing")
     if model_ice is None:
-        st.error("❌ ไม่พบไฟล์ model_ice_ensemble.pkl")
+        st.error("❌ Not found model_ice_ensemble.pkl")
     else:
         col1, col2 = st.columns([2, 1])
         with col1:
-            input_val = st.number_input("ป้อนค่า Timestamp (ตัวอย่าง: 1540892278):", value=1540892278.0, format="%.1f")
+            input_val = st.number_input("Enter Timestamp (Example: 1540892278):", value=1540892278.0, format="%.1f")
         with col2:
             st.write("")
             st.write("")
-            if st.button("เริ่มการทำนายผล"):
+            if st.button("Run Prediction"):
                 prediction = model_ice.predict([[input_val]])
                 st.balloons()
-                st.success(f"**ค่า Value ที่ทำนายได้คือ:** {prediction[0]:.4f}")
+                st.success(f"**Predicted Sensor Value:** {prediction[0]:.4f}")
 
     # 4. ตารางสถานะ (เรียงต่อด้านล่าง)
     st.divider()
-    st.subheader("📋 ตารางอธิบายสถานะการเคลื่อนที่")
+    st.subheader("📋 Movement Status Reference Table")
+    st.caption("This table assists in analyzing ice skating behavior based on various sensor metrics:")
     data_info = {
         "Time (ms)": [1000, 1100, 1200, 1300],
         "Accel_X (Push)": [0.2, 2.5, 0.5, 0.1],
         "Gyro_Z (Rotation)": [5.1, 12.4, 45.0, 2.0],
         "Compass (Heading)": ["180°", "182°", "210°", "230°"],
         "Status (Description)": [
-            "Gliding: ลื่นไถลไปข้างหน้า แรงกระแทกต่ำ",
-            "Push-off: เริ่มออกแรงถีบ (High Accel)",
-            "Turning: กำลังเข้าโค้ง (Gyro เปลี่ยนเร็ว)",
-            "Gliding: กลับมาลื่นไถลนิ่งๆ อีกครั้ง"
+            "Gliding: Steady forward motion with low impact.",
+            "Push-off: Executing a stroke against the ice (Spike in Acceleration).",
+            "Turning: Cornering or changing direction (Rapid Gyro/Heading change).",
+            "Gliding: Returning to a steady glide."
         ]
     }
     st.table(pd.DataFrame(data_info))
@@ -137,5 +140,6 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
 
 
