@@ -41,7 +41,7 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
     st.title("📊 การพัฒนาโมเดลทำนายค่าเซนเซอร์ (Ice Skating Data)")
     
 # --- ส่วนอธิบายเนื้อหา (Documentation) ---
-   with st.expander("📖 รายละเอียดแนวทางการพัฒนาโมเดล (คลิกเพื่ออ่าน)", expanded=True):
+with st.expander("📖 รายละเอียดแนวทางการพัฒนาโมเดล (คลิกเพื่ออ่าน)", expanded=True):
         st.subheader("1. การเตรียมข้อมูล (Data Preparation)")
         st.write("""
         - **Dataset:** ข้อมูลจากการวัดค่าเข็มทิศและเซนเซอร์ (Compass Sensor Data) ขณะเคลื่อนที่บนน้ำแข็ง
@@ -182,6 +182,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {final_res}")
                     st.write(f"ความเชื่อมั่น: {confidence:.2f}%")
+
 
 
 
