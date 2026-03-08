@@ -38,17 +38,62 @@ if menu == "หน้าแรก":
 
 # --- หน้าทดสอบโมเดล 1 (Ice) ---
 elif menu == "ทดสอบโมเดล 1 (Ice)":
-    st.header("📊 ทดสอบโมเดล Ensemble (Ice Dataset)")
+    st.title("📊 การพัฒนาโมเดลทำนายค่าเซนเซอร์ (Ice Dataset)")
     
-    if model_ice is None:
-        st.error("❌ ไม่พบไฟล์ model_ice_ensemble.pkl ในระบบ")
-    else:
-        input_val = st.number_input("ใส่ค่า Timestamp เพื่อทำนายค่า Value", value=1540892278.0)
-        
-        if st.button("ทำนายผล"):
-            prediction = model_ice.predict([[input_val]])
-            st.success(f"✅ ผลการทำนายค่า Value คือ: {prediction[0]:.4f}")
+    # --- ส่วนอธิบายเนื้อหา (Documentation) ---
+    with st.expander("📖 รายละเอียดแนวทางการพัฒนาโมเดล (คลิกเพื่ออ่าน)", expanded=True):
+        st.subheader("1. การเตรียมข้อมูล (Data Preparation)")
+        st.write("""
+        - **Data Cleaning:** ทำการตรวจสอบค่าว่าง (Missing Values) ใน Dataset หากพบจะใช้การแทนที่ด้วยค่าเฉลี่ย (Mean Imputation) เพื่อให้ข้อมูลมีความต่อเนื่อง
+        - **Feature Selection:** คัดเลือกตัวแปร `Timestamp` เป็นตัวแปรต้น (X) เพื่อทำนายค่า `Value` (y) ซึ่งเป็นข้อมูลเชิงปริมาณ
+        - **Data Splitting:** แบ่งข้อมูลออกเป็น Training Set 80% และ Test Set 20% เพื่อวัดประสิทธิภาพของโมเดล
+        """)
 
+        st.subheader("2. ทฤษฎีอัลกอริทึม (Ensemble Learning)")
+        st.write("""
+        โปรเจคนี้ใช้เทคนิค **Ensemble Voting Regressor** ซึ่งเป็นการรวมพลังของ 3 อัลกอริทึมหลัก ได้แก่:
+        - **Linear Regression:** ใช้หาความสัมพันธ์เชิงเส้นพื้นฐาน
+        - **Decision Tree:** ใช้การตัดสินใจแบบโครงสร้างต้นไม้เพื่อหาความสัมพันธ์ที่ซับซ้อน
+        - **Random Forest:** ใช้การสร้างต้นไม้หลายต้นมาช่วยกันหาคำตอบ เพื่อลดการเกิด Overfitting
+        - *หลักการ:* นำผลลัพธ์จากทั้ง 3 โมเดลมาหาค่าเฉลี่ย เพื่อให้ได้คำตอบที่แม่นยำและเสถียรที่สุด
+        """)
+
+        st.subheader("3. ขั้นตอนการพัฒนาโมเดล (Model Pipeline)")
+        st.markdown("""
+        1. นำเข้าข้อมูลจากไฟล์ `Ice.csv`
+        2. จัดการข้อมูลเบื้องต้นและทำความสะอาดข้อมูลด้วย `Pandas`
+        3. ฝึกสอนโมเดล (Training) ด้วย `Scikit-learn` โดยใช้เทคนิค Voting
+        4. บันทึกโมเดลในรูปแบบไฟล์ `.pkl` เพื่อนำมาใช้บนเว็บไซต์
+        """)
+
+        st.subheader("4. แหล่งอ้างอิงข้อมูล (References)")
+        st.info("📂 ข้อมูลชุดนี้อ้างอิงจาก: [Ice Dataset - Sensor Readings Samples] (แหล่งข้อมูลจำลองเพื่อการศึกษาภายในวิชา IS 2568)")
+
+    st.divider()
+
+    # --- ส่วนการทำนายผล (Prediction) ---
+    st.subheader("🔮 ส่วนการทดสอบทำนายผล")
+    if model_ice is None:
+        st.error("❌ ไม่พบไฟล์ model_ice_ensemble.pkl กรุณาตรวจสอบการอัปโหลดไฟล์")
+    else:
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            input_val = st.number_input("ป้อนค่า Timestamp ที่ต้องการทดสอบ:", value=1540892278.0, format="%.1f")
+        
+        with col2:
+            st.write("") # เว้นระยะ
+            st.write("") # เว้นระยะ
+            btn_predict = st.button("เริ่มการทำนายผล")
+
+        if btn_predict:
+            # ทำการทำนาย
+            prediction = model_ice.predict([[input_val]])
+            
+            st.balloons()
+            st.success(f"**ผลลัพธ์การทำนาย:** ค่า Value ที่ได้คือ **{prediction[0]:.4f}**")
+            
+            # ทำกราฟจำลองการทำนายเบื้องต้น
+            st.info("💡 หมายเหตุ: ค่าที่ได้มาจากการคำนวณถ่วงน้ำหนักของโมเดล Ensemble ทั้ง 3 ตัว")
 # --- หน้าทดสอบโมเดล 2 (MNIST) ---
 elif menu == "ทดสอบโมเดล 2 (MNIST)":
     st.header("🧠 ทดสอบโมเดล Neural Network (จำแนกตัวเลข)")
@@ -97,3 +142,4 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {final_res}")
                     st.write(f"ความเชื่อมั่น: {confidence:.2f}%")
+
