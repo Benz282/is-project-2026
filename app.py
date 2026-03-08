@@ -91,8 +91,13 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
             st.write("")
             if st.button("Run Prediction"):
                 prediction = model_ice.predict([[input_val]])
-                st.balloons()
-                st.success(f"**Predicted Sensor Value:** {prediction[0]:.4f}")
+                st.snow()
+                st.markdown(f"""
+            <div style="text-align: center; padding: 20px; border-radius: 10px; background-color: #f0f2f6; border: 1px solid #d1d5db;">
+                <p style="margin: 0; font-size: 16px; color: #31333F;">Predicted Sensor Value</p>
+                <h2 style="margin: 0; color: #007bff; font-size: 36px;">{prediction[0]:.4f}</h2>
+            </div>
+        """, unsafe_allow_html=True)
 
     # 4. ตารางสถานะ (เรียงต่อด้านล่าง)
     st.divider()
@@ -140,6 +145,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
 
 
 
