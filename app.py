@@ -38,7 +38,7 @@ if menu == "หน้าแรก":
 
 # --- หน้าทดสอบโมเดล 1 (Ice) ---
 elif menu == "ทดสอบโมเดล 1 (Ice)":
-    st.title("📊 การพัฒนาโมเดลทำนายค่าเซนเซอร์ (Ice Skating Data)")
+    st.title("📊 การพัฒนาโมเดลทำนายค่าเซนเซอร์ (Ice Skating Data)")
     
     # --- ส่วนอธิบายเนื้อหา (Documentation) ---
     with st.expander("📖 รายละเอียดแนวทางการพัฒนาโมเดล (คลิกเพื่ออ่าน)", expanded=True):
@@ -182,6 +182,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {final_res}")
                     st.write(f"ความเชื่อมั่น: {confidence:.2f}%")
+
 
 
 
