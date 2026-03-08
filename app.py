@@ -87,7 +87,6 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
         prediction = model_ice.predict([[input_val]])
         st.snow()
         
-        confidence = 94.5 
         
         # 3. ต้องย่อหน้าให้ st.markdown อยู่ข้างใน if เท่านั้น (สำคัญมาก!)
         st.markdown(f"""
@@ -152,6 +151,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI วิเคราะห์ว่าเป็นเลข: {np.argmax(res)}")
+
 
 
 
