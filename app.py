@@ -1,59 +1,60 @@
 import streamlit as st
-import pandas as pd
-import joblib
 import numpy as np
 import tensorflow as tf
 from PIL import Image
+import cv2 # สำหรับตรวจจับวัตถุในภาพ
 
 # --- ตั้งค่าหน้าเว็บ ---
-st.set_page_config(page_title="Project IS 2568", layout="wide")
+st.set_page_config(page_title="MNIST Digit Classifier", layout="centered")
 
-# --- เมนูข้างๆ (Sidebar) ---
-menu = st.sidebar.selectbox("เลือกหน้า", ["หน้าแรก", "ทดสอบโมเดล 1 (Ice)", "ทดสอบโมเดล 2 (MNIST)"])
+# --- โหลดโมเดล ---
+@st.cache_resource
+def load_mnist_model():
+    return tf.keras.models.load_model('model_mnist_nn.h5')
 
-# --- หน้าแรก ---
-if menu == "หน้าแรก":
-    st.title("🤖 โปรเจค AI - วิชา IS 2568")
-    st.write("ยินดีต้อนรับสู่โปรเจคการพัฒนา Machine Learning และ Neural Network")
-    st.info("กรุณาเลือกเมนูด้านซ้ายเพื่อเริ่มทดสอบโมเดล")
+try:
+    model = load_mnist_model()
+except:
+    st.error("ไม่พบไฟล์ model_mnist_nn.h5 กรุณาอัปโหลดไฟล์โมเดลขึ้น GitHub")
 
-# --- หน้าทดสอบโมเดล 1 (Ensemble) ---
-elif menu == "ทดสอบโมเดล 1 (Ice)":
-    st.header("📊 ทดสอบโมเดล Ensemble (Ice Dataset)")
-    
-    # โหลดโมเดล
-    model_ice = joblib.load('model_ice_ensemble.pkl')
-    
-    # สร้างช่องรับข้อมูลตัวเลข
-    input_val = st.number_input("ใส่ค่า Timestamp เพื่อทำนายค่า Value", value=1540892278.0)
-    
-    if st.button("ทำนายผล"):
-        # ทำนาย
-        prediction = model_ice.predict([[input_val]])
-        st.success(f"ผลการทำนายค่า Value คือ: {prediction[0]:.4f}")
+st.title("🧠 เครื่องมือวิเคราะห์ตัวเลขเขียนมือ")
+st.write("อัปโหลดรูปภาพตัวเลข (0-9) เพื่อให้ AI ทำนาย")
 
-# --- หน้าทดสอบโมเดล 2 (Neural Network) ---
-elif menu == "ทดสอบโมเดล 2 (MNIST)":
-    st.header("🧠 ทดสอบโมเดล Neural Network (จำแนกตัวเลข)")
-    
-    # โหลดโมเดล
-    model_mnist = tf.keras.models.load_model('model_mnist_nn.h5')
-    
-    st.write("อัปโหลดรูปภาพตัวเลขเขียนมือ (พื้นหลังดำ เส้นสีขาว)")
-    uploaded_file = st.file_uploader("เลือกไฟล์ภาพ...", type=["png", "jpg", "jpeg"])
-    
-    if uploaded_file is not None:
-        # แสดงรูปที่อัปโหลด
-        image = Image.open(uploaded_file).convert('L') # เปลี่ยนเป็นขาวดำ
-        st.image(image, caption='รูปที่อัปโหลด', width=150)
-        
-        # เตรียมรูปให้ AI (ปรับขนาดเป็น 28x28)
-        image = image.resize((28, 28))
-        img_array = np.array(image) / 255.0
-        img_array = img_array.reshape(1, 28, 28, 1)
-        
-        if st.button("วิเคราะห์ตัวเลข"):
-            # ทำนาย
-            res = model_mnist.predict(img_array)
-            final_res = np.argmax(res)
-            st.success(f"AI คิดว่าตัวเลขนี้คือเลข: {final_res}")
+# --- ส่วนอัปโหลดไฟล์ ---
+uploaded_file = st.file_uploader("เลือกไฟล์ภาพ (พื้นหลังสีดำ ตัวเลขสีขาว)...", type=["png", "jpg", "jpeg"])
+
+if uploaded_file is not None:
+    # 1. แสดงรูปต้นฉบับ
+    raw_image = Image.open(uploaded_file).convert('L') # แปลงเป็น Grayscale
+    st.image(raw_image, caption="รูปภาพที่คุณอัปโหลด", width=200)
+
+    # 2. ระบบคัดกรองจำนวนตัวเลขด้วย OpenCV (Contours)
+    img_cv = np.array(raw_image)
+    # ทำ Threshold เพื่อให้ภาพชัดเจน (ขาว-ดำ สนิท)
+    _, thresh = cv2.threshold(img_cv, 127, 255, cv2.THRESH_BINARY)
+    # ค้นหาเส้นรอบรูป (กลุ่มก้อนวัตถุ)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # กรองเฉพาะกลุ่มก้อนที่มีขนาดใหญ่พอจะเป็นตัวเลข (ป้องกันจุดรบกวน)
+    valid_digits = [cnt for cnt in contours if cv2.contourArea(cnt) > 20]
+    digit_count = len(valid_digits)
+
+    # 3. เงื่อนไขการแจ้งเตือน
+    if digit_count > 1:
+        st.error(f"⚠️ ตรวจพบตัวเลข {digit_count} ตัวในภาพ! ระบบรองรับการทำนายเพียงครั้งละ 1 ตัวเลขเท่านั้น")
+    elif digit_count == 0:
+        st.warning("❌ ไม่พบตัวเลขในรูปภาพ กรุณาลองใหม่อีกครั้ง")
+    else:
+        # กรณีพบ 1 ตัวเลขถ้วน -> ทำการทำนาย
+        if st.button("วิเคราะห์ผลลัพธ์"):
+            # เตรียมภาพให้พร้อมสำหรับ Model (28x28)
+            img_resized = raw_image.resize((28, 28))
+            img_input = np.array(img_resized) / 255.0 # Normalization
+            img_input = img_input.reshape(1, 28, 28, 1) # Reshape ให้ตรงตาม Model Input
+
+            # ส่งให้ AI ทาย
+            prediction = model.predict(img_input)
+            result = np.argmax(prediction)
+            
+            st.success(f"🎯 AI วิเคราะห์ว่าเป็นตัวเลข: {result}")
+            st.balloons()
