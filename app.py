@@ -237,38 +237,46 @@ else:
                     else:
                         st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
         
-        # # 3. ต้องย่อหน้าให้ st.markdown อยู่ข้างใน if เท่านั้น (สำคัญมาก!)
-        # st.markdown(f"""
-        #     <div style="text-align: center; padding: 25px; border-radius: 15px; background-color: #e8f5e9; border: 2px solid #c8e6c9; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
-        #         <p style="margin: 0; font-size: 14px; color: #2e7d32; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Predicted Sensor Value</p>
-        #         <h1 style="margin: 10px 0; color: #1b5e20; font-size: 48px;">{prediction[0]:.4f}</h1>
-        #         <hr style="border: 0; border-top: 1px solid #c8e6c9; margin: 15px 0;">
-        #         <p style="margin: 0; font-size: 16px; color: #2e7d32; font-weight: bold;">
-        #         </p>
-        #         <div style="background-color: #ffffff; border-radius: 10px; height: 8px; margin-top: 10px;">
-        #         </div>
-        #     </div>
-        # """, unsafe_allow_html=True)
-        
-        # st.caption("<center style='margin-top:10px;'>Confidence score is based on Model performance during validation</center>", unsafe_allow_html=True)
 
-    # 4. ตารางสถานะ (เรียงต่อด้านล่าง)
-    st.divider()
-    st.subheader("📋 Movement Status Reference Table")
-    st.caption("This table assists in analyzing ice skating behavior based on various sensor metrics:")
-    data_info = {
-        "Time (ms)": [1000, 1100, 1200, 1300],
-        "Accel_X (Push)": [0.2, 2.5, 0.5, 0.1],
-        "Gyro_Z (Rotation)": [5.1, 12.4, 45.0, 2.0],
-        "Compass (Heading)": ["180°", "182°", "210°", "230°"],
-        "Status (Description)": [
-            "Gliding: Steady forward motion with low impact.",
-            "Push-off: Executing a stroke against the ice (Spike in Acceleration).",
-            "Turning: Cornering or changing direction (Rapid Gyro/Heading change).",
-            "Gliding: Returning to a steady glide."
-        ]
-    }
-    st.table(pd.DataFrame(data_info))
+    # สร้างข้อมูลสำหรับตารางสถานะ
+status_data = {
+    "Metric / Feature": [
+        "Algorithm Type",
+        "Data Processing",
+        "Target Accuracy",
+        "Training Speed",
+        "Inference Speed",
+        "Interpretability",
+        "Primary Use Case"
+    ],
+    "Machine Learning (Ensemble)": [
+        "Voting Classifier (RF, SVM, LogReg)",
+        "Flattened 1D (784 features)",
+        "94% - 97%",
+        "Fast (Seconds to Minutes)",
+        "High (Lightweight)",
+        "High (White Box)",
+        "Low-resource / Standard ML"
+    ],
+    "Neural Network (CNN)": [
+        "Convolutional Neural Network",
+        "2D Image (28x28x1)",
+        "98% - 99.7%+",
+        "Slow (Minutes to Hours)",
+        "Moderate (Heavier)",
+        "Low (Black Box)",
+        "High Precision / Real-world OCR"
+    ]
+}
+
+df_status = pd.DataFrame(status_data)
+
+# แสดงผลใน Streamlit
+st.subheader("📊 Model Performance & Status Summary")
+st.table(df_status)
+
+# หรือจะใช้ st.dataframe หากต้องการให้เลื่อนดูได้
+# st.dataframe(df_status, use_container_width=True)
 
 
 
