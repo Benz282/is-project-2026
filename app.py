@@ -28,10 +28,10 @@ menu = st.sidebar.selectbox("เลือกหน้า", ["Homepage", "Model P
 # --- หน้าแรก ---
 if menu == "Homepage":
     st.title("🤖 Project AI - Intelligent System 2568 ")
-    st.write(""
+    st.write("""
              **Welcome to the ML & Neural Network Development Project.**
              **By** น.ส.โยษิตา คงธนประเสริฐ 6704062662194 Sec.5
-             "")
+             """)
     st.markdown("""
     ### Project Scope:
     - **Model 1:** Sensor Value Prediction on Ice Dataset using Ensemble Learning
