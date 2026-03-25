@@ -121,7 +121,7 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
     }
     st.table(pd.DataFrame(data_info))
 
- # --- หน้าทดสอบโมเดล 2 (MNIST) ---
+# --- หน้าทดสอบโมเดล 2 (MNIST) ---
 elif menu == "ทดสอบโมเดล 2 (MNIST)":
     st.header("🧠 ทดสอบโมเดล Neural Network (MNIST)")
     st.title("📊 Traditional ML vs. Neural Networks (MNIST)")
@@ -137,35 +137,17 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
             - **Flattening:** Reshaped 2D images (28x28) into 1D vectors (784 features) for compatibility with ML algorithms.
         - **Independent Variable (X):** 784 Pixel Intensity Values | **Dependent Variable (y):** Digit Label (0-9).
         """)
- 
+
         st.subheader("2. Algorithm Theory (Neural Network)")
-        st.write(""" 
-        This model utilizes the **Voting Classifier** concept, combining multiple 'weak learners' to create a 'strong learner' to maximize classification accuracy:
-        1. **Logistic Regression:** Serves as a baseline linear classifier to identify simple pixel-to-digit correlations.
-        2. **Random Forest (Bagging):** An ensemble of multiple Decision Trees that reduces variance and prevents overfitting by averaging predictions.
-        3. **Support Vector Machine (SVM):** Finds the optimal hyperplane to separate digit classes in a high-dimensional space.
- 
-         **Concept:** The final prediction is determined by **Soft Voting**, where the model averages the probability scores from all three base models.
-         """)
- 
+        st.write("""
+        This model utilizes the **Convolutional Neural Network (CNN)** concept for high-accuracy image classification. 
+        It extracts spatial features (edges, curves) to identify digits correctly regardless of handwriting style.
+        """)
+
         st.subheader("3. Data References")
         st.success("🔗 **Source:** [Kaggle: Digit Recognizer (MNIST)](https://www.kaggle.com/c/digit-recognizer/data?select=sample_submission.csv)")
-        st.caption("Reference by Kaggle Competition: Digit Recognizer Dataset")
- 
-     
- 
-# --- หน้าทดสอบโมเดล 2 (MNIST) ---
-elif menu == "ทดสอบโมเดล 2 (MNIST)":
-    st.header("🧠 ทดสอบโมเดล Neural Network (MNIST)")
-    st.title("📊 Traditional ML vs. Neural Networks (MNIST)")
-    st.caption("Project: Digit Recognizer (MNIST) | Model: Ensemble Voting Classifier & CNN")
-    
-    # 1. ส่วนอธิบายแนวทาง (Expander)
-    with st.expander("📖 Model Development Details (Click to read)", expanded=True):
-        st.subheader("1. Data Preparation")
-        st.write("...") # โค้ดส่วนอธิบายของคุณ
 
-    # --- วิธีแก้: ย่อหน้าส่วนนี้ทั้งหมดให้ตรงกับ st.header ด้านบน ---
+    # 2. ส่วนการทำนายผล (Prediction Section) - ย่อหน้าให้ตรงกับ elif ด้านบน
     st.divider()
     st.header("🔮 Model Prediction Testing")
 
@@ -176,7 +158,7 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
         col1, col2 = st.columns([1, 1])
         
         with col1:
-            uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"])
+            uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"], key="mnist_upload")
         
         if uploaded_file is not None:
             # โหลดรูปภาพ
@@ -184,7 +166,9 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
             
             # --- Preprocessing Step ---
             img_for_cv = np.array(image)
+            # 1. ปรับปรุงรูปภาพ: หากพื้นหลังขาว ตัวเลขดำ ให้ Invert (สลับสี)
             if np.mean(img_for_cv) > 127: 
+                from PIL import ImageOps
                 image = ImageOps.invert(image)
                 img_for_cv = np.array(image)
                  
@@ -201,21 +185,23 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
             elif digit_count == 0:
                 st.warning("❓ No digit detected. Try drawing more clearly.")
             else:
+                # ปุ่มกดยืนยันการวิเคราะห์
                 if st.button("🚀 Analyze Now", use_container_width=True):
                     with st.spinner('AI is thinking...'):
                         # 3. เตรียมข้อมูลเข้าโมเดล
                         img_resized = image.resize((28, 28))
                         img_array = np.array(img_resized)
                          
+                        # Normalization
                         img_input = img_array.astype('float32') / 255.0
-                        img_input = img_input.reshape(1, 28, 28, 1) 
+                        img_input = img_input.reshape(1, 28, 28, 1) # สำหรับ CNN
                          
                         # Predict
                         prediction = model_mnist.predict(img_input)
                         result = np.argmax(prediction)
                         confidence = np.max(prediction) * 100
                         
-                        # --- แสดงผลลัพธ์ ---
+                        # --- แสดงผลลัพธ์แบบตัวเลขขนาดใหญ่ ---
                         st.divider()
                         _, center_col, _ = st.columns([1, 2, 1])
                         
