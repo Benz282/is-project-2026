@@ -29,8 +29,8 @@ menu = st.sidebar.selectbox("เลือกหน้า", ["Homepage", "Model P
 if menu == "Homepage":
     st.title("🤖 Project AI - Intelligent System 2568 ")
     st.write("""
-             -**Welcome to the ML & Neural Network Development Project.**
-             -**By** น.ส.โยษิตา คงธนประเสริฐ 6704062662194 Sec.5
+             **Welcome to the ML & Neural Network Development Project.**\n
+             **By** น.ส.โยษิตา คงธนประเสริฐ 6704062662194 Sec.5
              """)
     st.markdown("""
     ### Project Scope:
