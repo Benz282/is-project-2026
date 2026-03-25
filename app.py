@@ -154,86 +154,83 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
  
      
  
-     # --- ส่วนการทำนายผลแบบจัดวางตรงกลาง ---
-   st.divider()
-   st.header("🔮 Model Prediction Testing")
-
-   if 'model_mnist' not in locals() or model_mnist is None:
-       st.error("❌ Model not found! Please ensure 'model_mnist_nn.h5' is loaded correctly.")
-   else:
-    # สร้างคอลัมน์เพื่อให้ UI ดูสมดุล
-       col1, col2 = st.columns([1, 1])
+# --- หน้าทดสอบโมเดล 2 (MNIST) ---
+elif menu == "ทดสอบโมเดล 2 (MNIST)":
+    st.header("🧠 ทดสอบโมเดล Neural Network (MNIST)")
+    st.title("📊 Traditional ML vs. Neural Networks (MNIST)")
+    st.caption("Project: Digit Recognizer (MNIST) | Model: Ensemble Voting Classifier & CNN")
     
-       with col1:
-           uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"])
-    
-       if uploaded_file is not None:
-        # โหลดรูปภาพ
-           image = Image.open(uploaded_file).convert('L')
-        
-        # --- Preprocessing Step ---
-        # 1. ปรับปรุงรูปภาพ: หากเป็นภาพพื้นหลังขาว ตัวเลขดำ ต้อง Invert ให้เป็นพื้นดำ ตัวเลขขาว (แบบ MNIST)
-           img_for_cv = np.array(image)
-           if np.mean(img_for_cv) > 127: # ถ้าค่าเฉลี่ยสีสว่าง (พื้นขาว)
-               image = ImageOps.invert(image)
-               img_for_cv = np.array(image)
-             
-        # 2. ตรวจสอบการหาตัวเลข (Contour Detection)
-        _, thresh = cv2.threshold(img_for_cv, 100, 255, cv2.THRESH_BINARY)
-        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        digit_count = sum(1 for c in contours if cv2.contourArea(c) > 20)
+    # 1. ส่วนอธิบายแนวทาง (Expander)
+    with st.expander("📖 Model Development Details (Click to read)", expanded=True):
+        st.subheader("1. Data Preparation")
+        st.write("...") # โค้ดส่วนอธิบายของคุณ
 
-        with col2:
-            st.image(image, caption='Processed Image (28x28)', width=150)
+    # --- วิธีแก้: ย่อหน้าส่วนนี้ทั้งหมดให้ตรงกับ st.header ด้านบน ---
+    st.divider()
+    st.header("🔮 Model Prediction Testing")
+
+    if model_mnist is None:
+        st.error("❌ Model not found! Please ensure 'model_mnist_nn.h5' is loaded correctly.")
+    else:
+        # สร้างคอลัมน์เพื่อให้ UI ดูสมดุล
+        col1, col2 = st.columns([1, 1])
         
-        # แสดงผลลัพธ์การตรวจสอบเบื้องต้น
-        if digit_count > 1:
-            st.error(f"⚠️ Found {digit_count} digits! Please upload only ONE digit at a time.")
-        elif digit_count == 0:
-            st.warning("❓ No digit detected. Try drawing more clearly.")
-        else:
-            # ปุ่มกดยืนยันการวิเคราะห์
-            if st.button("🚀 Analyze Now", use_container_width=True):
-                with st.spinner('AI is thinking...'):
-                    # 3. เตรียมข้อมูลเข้าโมเดล
-                    img_resized = image.resize((28, 28))
-                    img_array = np.array(img_resized)
-                     
-                    # Normalization
-                    img_input = img_array.astype('float32') / 255.0
-                img_input = img_input.reshape(1, 28, 28, 1) # สำหรับ CNN
-                     
-                    # Predict
-                prediction = model_mnist.predict(img_input)
-                result = np.argmax(prediction)
-                confidence = np.max(prediction) * 100
-                    
-                    # --- แสดงผลลัพธ์แบบตัวเลขขนาดใหญ่ ---
-                st.divider()
-                    
-                    # สร้าง Layout สำหรับแสดงตัวเลขโดดๆ ตรงกลาง
-                _, center_col, _ = st.columns([1, 2, 1])
-                    
-                with center_col:
-                    st.write("<p style='text-align: center; font-size: 20px;'>Predicted Digit</p>", unsafe_allow_html=True)
-                        # แสดงตัวเลขขนาดใหญ่ สีเขียวเน้นความชัดเจน
-                    st.markdown(f"""
-                        <div style="
-                            background-color: #262730; 
-                            border-radius: 10px; 
-                            border: 2px solid #4CAF50;
-                            padding: 20px;
-                            text-align: center;
-                        "> 
-                            <h1 style="color: #4CAF50; font-size: 100px; margin: 0;">{result}</h1>
-                        </div>
-                    """, unsafe_allow_html=True)
+        with col1:
+            uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"])
+        
+        if uploaded_file is not None:
+            # โหลดรูปภาพ
+            image = Image.open(uploaded_file).convert('L')
+            
+            # --- Preprocessing Step ---
+            img_for_cv = np.array(image)
+            if np.mean(img_for_cv) > 127: 
+                image = ImageOps.invert(image)
+                img_for_cv = np.array(image)
+                 
+            # 2. ตรวจสอบการหาตัวเลข (Contour Detection)
+            _, thresh = cv2.threshold(img_for_cv, 100, 255, cv2.THRESH_BINARY)
+            contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            digit_count = sum(1 for c in contours if cv2.contourArea(c) > 20)
+
+            with col2:
+                st.image(image, caption='Processed Image (28x28)', width=150)
+            
+            if digit_count > 1:
+                st.error(f"⚠️ Found {digit_count} digits! Please upload only ONE digit at a time.")
+            elif digit_count == 0:
+                st.warning("❓ No digit detected. Try drawing more clearly.")
+            else:
+                if st.button("🚀 Analyze Now", use_container_width=True):
+                    with st.spinner('AI is thinking...'):
+                        # 3. เตรียมข้อมูลเข้าโมเดล
+                        img_resized = image.resize((28, 28))
+                        img_array = np.array(img_resized)
+                         
+                        img_input = img_array.astype('float32') / 255.0
+                        img_input = img_input.reshape(1, 28, 28, 1) 
+                         
+                        # Predict
+                        prediction = model_mnist.predict(img_input)
+                        result = np.argmax(prediction)
+                        confidence = np.max(prediction) * 100
                         
-                        # แสดงแถบเปอร์เซ็นต์ความมั่นใจ
-                    st.progress(int(confidence))
-                    st.write(f"<p style='text-align: center;'>Confidence: {confidence:.2f}%</p>", unsafe_allow_html=True)
+                        # --- แสดงผลลัพธ์ ---
+                        st.divider()
+                        _, center_col, _ = st.columns([1, 2, 1])
+                        
+                        with center_col:
+                            st.write("<p style='text-align: center; font-size: 20px;'>Predicted Digit</p>", unsafe_allow_html=True)
+                            st.markdown(f"""
+                                <div style="background-color: #262730; border-radius: 10px; border: 2px solid #4CAF50; padding: 20px; text-align: center;"> 
+                                    <h1 style="color: #4CAF50; font-size: 100px; margin: 0;">{result}</h1>
+                                </div>
+                            """, unsafe_allow_html=True)
+                            
+                            st.progress(int(confidence))
+                            st.write(f"<p style='text-align: center;'>Confidence: {confidence:.2f}%</p>", unsafe_allow_html=True)
 
-                if confidence > 80:
-                    st.success("✅ Prediction Successful!")
-                else:
-                    st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
+                        if confidence > 80:
+                            st.success("✅ Prediction Successful!")
+                        else:
+                            st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
