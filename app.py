@@ -155,28 +155,28 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
      
  
      # --- ส่วนการทำนายผลแบบจัดวางตรงกลาง ---
-st.divider()
-st.header("🔮 Model Prediction Testing")
+   st.divider()
+   st.header("🔮 Model Prediction Testing")
 
-if 'model_mnist' not in locals() or model_mnist is None:
-    st.error("❌ Model not found! Please ensure 'model_mnist_nn.h5' is loaded correctly.")
-else:
+   if 'model_mnist' not in locals() or model_mnist is None:
+       st.error("❌ Model not found! Please ensure 'model_mnist_nn.h5' is loaded correctly.")
+   else:
     # สร้างคอลัมน์เพื่อให้ UI ดูสมดุล
-    col1, col2 = st.columns([1, 1])
+       col1, col2 = st.columns([1, 1])
     
-    with col1:
-        uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"])
+       with col1:
+           uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"])
     
-    if uploaded_file is not None:
+       if uploaded_file is not None:
         # โหลดรูปภาพ
-        image = Image.open(uploaded_file).convert('L')
+           image = Image.open(uploaded_file).convert('L')
         
         # --- Preprocessing Step ---
         # 1. ปรับปรุงรูปภาพ: หากเป็นภาพพื้นหลังขาว ตัวเลขดำ ต้อง Invert ให้เป็นพื้นดำ ตัวเลขขาว (แบบ MNIST)
-        img_for_cv = np.array(image)
-        if np.mean(img_for_cv) > 127: # ถ้าค่าเฉลี่ยสีสว่าง (พื้นขาว)
-            image = ImageOps.invert(image)
-            img_for_cv = np.array(image)
+           img_for_cv = np.array(image)
+           if np.mean(img_for_cv) > 127: # ถ้าค่าเฉลี่ยสีสว่าง (พื้นขาว)
+               image = ImageOps.invert(image)
+               img_for_cv = np.array(image)
              
         # 2. ตรวจสอบการหาตัวเลข (Contour Detection)
         _, thresh = cv2.threshold(img_for_cv, 100, 255, cv2.THRESH_BINARY)
