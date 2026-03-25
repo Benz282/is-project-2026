@@ -182,12 +182,13 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
                     img_input = img_input.reshape(1, 28, 28, 1)
                     res = model_mnist.predict(img_input)
                     st.success(f"🎯 AI Detected as number: {np.argmax(res)}")
+                    st.digit()
             
            # 2. ปุ่มกด
     if st.button("Run Prediction", use_container_width=True):
         # สร้างตัวแปร prediction ขึ้นมาจากการกดปุ่ม
         prediction = model_ice.predict([[input_val]])
-        st.digit()
+        
         
         
         # 3. ต้องย่อหน้าให้ st.markdown อยู่ข้างใน if เท่านั้น (สำคัญมาก!)
