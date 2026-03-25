@@ -155,49 +155,85 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
     st.divider()
 
     # --- ส่วนการทำนายผลแบบจัดวางตรงกลาง ---
-    st.subheader("🔮 Model Prediction Testing")
+st.header("🔮 Model Prediction Testing")
 
-    if model_mnist is None:
-        st.error("❌ Don't found model_mnist_nn.h5")
-    else:
-        uploaded_file = st.file_uploader("Select picture...", type=["png", "jpg", "jpeg"])
-        if uploaded_file is not None:
-            image = Image.open(uploaded_file).convert('L')
-            img_cv = np.array(image)
-            _, thresh = cv2.threshold(img_cv, 127, 255, cv2.THRESH_BINARY)
-            contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            digit_count = sum(1 for c in contours if cv2.contourArea(c) > 30)
-            
-            st.image(image, caption='รูปที่อัปโหลด', width=150)
-            if digit_count > 1:
-                st.error(f"⚠️ {digit_count} numbers found! Please use a single image.")
-            elif digit_count == 0:
-                st.warning("❓ Could not find any numbers.")
-            else:
-                if st.button("Analyze numbers", use_container_width=True):
+if 'model_mnist' not in locals() or model_mnist is None:
+    st.error("❌ Model not found! Please ensure 'model_mnist_nn.h5' is loaded correctly.")
+else:
+    # สร้างคอลัมน์เพื่อให้ UI ดูสมดุล
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"])
+    
+    if uploaded_file is not None:
+        # โหลดรูปภาพ
+        image = Image.open(uploaded_file).convert('L')
+        
+        # --- Preprocessing Step ---
+        # 1. ปรับปรุงรูปภาพ: หากเป็นภาพพื้นหลังขาว ตัวเลขดำ ต้อง Invert ให้เป็นพื้นดำ ตัวเลขขาว (แบบ MNIST)
+        img_for_cv = np.array(image)
+        if np.mean(img_for_cv) > 127: # ถ้าค่าเฉลี่ยสีสว่าง (พื้นขาว)
+            image = ImageOps.invert(image)
+            img_for_cv = np.array(image)
+
+        # 2. ตรวจสอบการหาตัวเลข (Contour Detection)
+        _, thresh = cv2.threshold(img_for_cv, 100, 255, cv2.THRESH_BINARY)
+        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        digit_count = sum(1 for c in contours if cv2.contourArea(c) > 20)
+
+        with col2:
+            st.image(image, caption='Processed Image (28x28)', width=150)
+        
+        # แสดงผลลัพธ์การตรวจสอบเบื้องต้น
+        if digit_count > 1:
+            st.error(f"⚠️ Found {digit_count} digits! Please upload only ONE digit at a time.")
+        elif digit_count == 0:
+            st.warning("❓ No digit detected. Try drawing more clearly.")
+        else:
+            # ปุ่มกดยืนยันการวิเคราะห์
+            if st.button("🚀 Analyze Now", use_container_width=True):
+                with st.spinner('AI is thinking...'):
+                    # 3. เตรียมข้อมูลเข้าโมเดล
                     img_resized = image.resize((28, 28))
                     img_array = np.array(img_resized)
-                    img_array = np.where(img_array > 100, 255, 0)
+                    
+                    # Normalization
                     img_input = img_array.astype('float32') / 255.0
-                    img_input = img_input.reshape(1, 28, 28, 1)
-                    res = model_mnist.predict(img_input)
-                    st.success(f"🎯 AI Detected as number: {np.argmax(res)}")
-                    st.digit()
+                    img_input = img_input.reshape(1, 28, 28, 1) # สำหรับ CNN
+                    
+                    # Predict
+                    prediction = model_mnist.predict(img_input)
+                    result = np.argmax(prediction)
+                    confidence = np.max(prediction) * 100
+                    
+                    # --- แสดงผลลัพธ์ ---
+                    st.divider()
+                    res_col1, res_col2 = st.columns(2)
+                    with res_col1:
+                        st.metric(label="🎯 Predicted Digit", value=str(result))
+                    with res_col2:
+                        st.metric(label="📊 Confidence", value=f"{confidence:.2f}%")
+                    
+                    if confidence > 80:
+                        st.balloons() # เปลี่ยนจาก st.digit() เป็น balloons เพื่อเฉลิมฉลอง
+                    else:
+                        st.warning("The model is not very confident in this prediction.")
         
-        # 3. ต้องย่อหน้าให้ st.markdown อยู่ข้างใน if เท่านั้น (สำคัญมาก!)
-        st.markdown(f"""
-            <div style="text-align: center; padding: 25px; border-radius: 15px; background-color: #e8f5e9; border: 2px solid #c8e6c9; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
-                <p style="margin: 0; font-size: 14px; color: #2e7d32; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Predicted Sensor Value</p>
-                <h1 style="margin: 10px 0; color: #1b5e20; font-size: 48px;">{prediction[0]:.4f}</h1>
-                <hr style="border: 0; border-top: 1px solid #c8e6c9; margin: 15px 0;">
-                <p style="margin: 0; font-size: 16px; color: #2e7d32; font-weight: bold;">
-                </p>
-                <div style="background-color: #ffffff; border-radius: 10px; height: 8px; margin-top: 10px;">
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
+        # # 3. ต้องย่อหน้าให้ st.markdown อยู่ข้างใน if เท่านั้น (สำคัญมาก!)
+        # st.markdown(f"""
+        #     <div style="text-align: center; padding: 25px; border-radius: 15px; background-color: #e8f5e9; border: 2px solid #c8e6c9; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
+        #         <p style="margin: 0; font-size: 14px; color: #2e7d32; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Predicted Sensor Value</p>
+        #         <h1 style="margin: 10px 0; color: #1b5e20; font-size: 48px;">{prediction[0]:.4f}</h1>
+        #         <hr style="border: 0; border-top: 1px solid #c8e6c9; margin: 15px 0;">
+        #         <p style="margin: 0; font-size: 16px; color: #2e7d32; font-weight: bold;">
+        #         </p>
+        #         <div style="background-color: #ffffff; border-radius: 10px; height: 8px; margin-top: 10px;">
+        #         </div>
+        #     </div>
+        # """, unsafe_allow_html=True)
         
-        st.caption("<center style='margin-top:10px;'>Confidence score is based on Model performance during validation</center>", unsafe_allow_html=True)
+        # st.caption("<center style='margin-top:10px;'>Confidence score is based on Model performance during validation</center>", unsafe_allow_html=True)
 
     # 4. ตารางสถานะ (เรียงต่อด้านล่าง)
     st.divider()
