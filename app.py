@@ -207,18 +207,35 @@ else:
                     result = np.argmax(prediction)
                     confidence = np.max(prediction) * 100
                     
-                    # --- แสดงผลลัพธ์ ---
+                    # --- แสดงผลลัพธ์แบบตัวเลขขนาดใหญ่ ---
                     st.divider()
-                    res_col1, res_col2 = st.columns(2)
-                    with res_col1:
-                        st.metric(label="🎯 Predicted Digit", value=str(result))
-                    with res_col2:
-                        st.metric(label="📊 Confidence", value=f"{confidence:.2f}%")
                     
+                    # สร้าง Layout สำหรับแสดงตัวเลขโดดๆ ตรงกลาง
+                    _, center_col, _ = st.columns([1, 2, 1])
+                    
+                    with center_col:
+                        st.write("<p style='text-align: center; font-size: 20px;'>Predicted Digit</p>", unsafe_allow_html=True)
+                        # แสดงตัวเลขขนาดใหญ่ สีเขียวเน้นความชัดเจน
+                        st.markdown(f"""
+                            <div style="
+                                background-color: #262730; 
+                                border-radius: 10px; 
+                                border: 2px solid #4CAF50;
+                                padding: 20px;
+                                text-align: center;
+                            ">
+                                <h1 style="color: #4CAF50; font-size: 100px; margin: 0;">{result}</h1>
+                            </div>
+                        """, unsafe_allow_html=True)
+                        
+                        # แสดงแถบเปอร์เซ็นต์ความมั่นใจ
+                        st.progress(int(confidence))
+                        st.write(f"<p style='text-align: center;'>Confidence: {confidence:.2f}%</p>", unsafe_allow_html=True)
+
                     if confidence > 80:
-                        st.balloons() # เปลี่ยนจาก st.digit() เป็น balloons เพื่อเฉลิมฉลอง
+                        st.success("✅ Prediction Successful!")
                     else:
-                        st.warning("The model is not very confident in this prediction.")
+                        st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
         
         # # 3. ต้องย่อหน้าให้ st.markdown อยู่ข้างใน if เท่านั้น (สำคัญมาก!)
         # st.markdown(f"""
