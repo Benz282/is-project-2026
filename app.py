@@ -204,9 +204,9 @@ else:
                 img_input = img_input.reshape(1, 28, 28, 1) # สำหรับ CNN
                      
                     # Predict
-                    prediction = model_mnist.predict(img_input)
-                    result = np.argmax(prediction)
-                    confidence = np.max(prediction) * 100
+                prediction = model_mnist.predict(img_input)
+                result = np.argmax(prediction)
+                confidence = np.max(prediction) * 100
                     
                     # --- แสดงผลลัพธ์แบบตัวเลขขนาดใหญ่ ---
                     st.divider()
