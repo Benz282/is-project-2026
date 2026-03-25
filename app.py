@@ -148,9 +148,9 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
          **Concept:** The final prediction is determined by **Soft Voting**, where the model averages the probability scores from all three base models.
          """)
  
-         st.subheader("3. Data References")
-         st.success("🔗 **Source:** [Kaggle: Digit Recognizer (MNIST)](https://www.kaggle.com/c/digit-recognizer/data?select=sample_submission.csv)")
-         st.caption("Reference by Kaggle Competition: Digit Recognizer Dataset")
+        st.subheader("3. Data References")
+        st.success("🔗 **Source:** [Kaggle: Digit Recognizer (MNIST)](https://www.kaggle.com/c/digit-recognizer/data?select=sample_submission.csv)")
+        st.caption("Reference by Kaggle Competition: Digit Recognizer Dataset")
  
      
  
