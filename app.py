@@ -121,122 +121,119 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
     }
     st.table(pd.DataFrame(data_info))
 
-# --- หน้าทดสอบโมเดล 2 (MNIST) ---
-elif menu == "ทดสอบโมเดล 2 (MNIST)":
+ # --- หน้าทดสอบโมเดล 2 (MNIST) ---
+ elif menu == "ทดสอบโมเดล 2 (MNIST)":
     st.header("🧠 ทดสอบโมเดล Neural Network (MNIST)")
-    st.title("📊 Traditional ML vs. Neural Networks (MNIST)")
-    st.caption("Project: Digit Recognizer (MNIST) | Model: Ensemble Voting Classifier & CNN")
+     st.title("📊 Traditional ML vs. Neural Networks (MNIST)")
+     st.caption("Project: Digit Recognizer (MNIST) | Model: Ensemble Voting Classifier & CNN")
     
-    # 1. ส่วนอธิบายแนวทาง
-    with st.expander("📖 Model Development Details (Click to read)", expanded=True):
-        st.subheader("1. Data Preparation")
-        st.write("""
-        While both approaches start with the same raw data, the preprocessing steps differ based on the algorithm's architecture:
-        - **Dataset:** Handwritten digits (0-9) represented as grayscale images of 28x28 pixels.
-        - **Data Management:** - **Normalization:** Scaled pixel values from [0, 255] to [0, 1] to improve convergence speed.
-            - **Flattening:** Reshaped 2D images (28x28) into 1D vectors (784 features) for compatibility with ML algorithms.
-        - **Independent Variable (X):** 784 Pixel Intensity Values | **Dependent Variable (y):** Digit Label (0-9).
-        """)
+     # 1. ส่วนอธิบายแนวทาง
+     with st.expander("📖 Model Development Details (Click to read)", expanded=True):
+         st.subheader("1. Data Preparation")
+         st.write("""
+         While both approaches start with the same raw data, the preprocessing steps differ based on the algorithm's architecture:
+         - **Dataset:** Handwritten digits (0-9) represented as grayscale images of 28x28 pixels.
+         - **Data Management:** - **Normalization:** Scaled pixel values from [0, 255] to [0, 1] to improve convergence speed.
+             - **Flattening:** Reshaped 2D images (28x28) into 1D vectors (784 features) for compatibility with ML algorithms.
+         - **Independent Variable (X):** 784 Pixel Intensity Values | **Dependent Variable (y):** Digit Label (0-9).
+         """)
+ 
+         st.subheader("2. Algorithm Theory (Neural Network)")
+         st.write("""
+         This model utilizes the **Voting Classifier** concept, combining multiple 'weak learners' to create a 'strong learner' to maximize classification accuracy:
+         1. **Logistic Regression:** Serves as a baseline linear classifier to identify simple pixel-to-digit correlations.
+         2. **Random Forest (Bagging):** An ensemble of multiple Decision Trees that reduces variance and prevents overfitting by averaging predictions.
+         3. **Support Vector Machine (SVM):** Finds the optimal hyperplane to separate digit classes in a high-dimensional space.
+ 
+         **Concept:** The final prediction is determined by **Soft Voting**, where the model averages the probability scores from all three base models.
+         """)
+ 
+         st.subheader("3. Data References")
+         st.success("🔗 **Source:** [Kaggle: Digit Recognizer (MNIST)](https://www.kaggle.com/c/digit-recognizer/data?select=sample_submission.csv)")
+         st.caption("Reference by Kaggle Competition: Digit Recognizer Dataset")
+ 
+     
+ 
+     # --- ส่วนการทำนายผลแบบจัดวางตรงกลาง ---
+ st.divider()
+ st.header("🔮 Model Prediction Testing")
 
-        st.subheader("2. Algorithm Theory (Neural Network)")
-        st.write("""
-        This model utilizes the **Voting Classifier** concept, combining multiple 'weak learners' to create a 'strong learner' to maximize classification accuracy:
-        1. **Logistic Regression:** Serves as a baseline linear classifier to identify simple pixel-to-digit correlations.
-        2. **Random Forest (Bagging):** An ensemble of multiple Decision Trees that reduces variance and prevents overfitting by averaging predictions.
-        3. **Support Vector Machine (SVM):** Finds the optimal hyperplane to separate digit classes in a high-dimensional space.
-
-        **Concept:** The final prediction is determined by **Soft Voting**, where the model averages the probability scores from all three base models.
-        """)
-
-        st.subheader("3. Data References")
-        st.success("🔗 **Source:** [Kaggle: Digit Recognizer (MNIST)](https://www.kaggle.com/c/digit-recognizer/data?select=sample_submission.csv)")
-        st.caption("Reference by Kaggle Competition: Digit Recognizer Dataset")
-
+ if 'model_mnist' not in locals() or model_mnist is None:
+     st.error("❌ Model not found! Please ensure 'model_mnist_nn.h5' is loaded correctly.")
+ else:
+     # สร้างคอลัมน์เพื่อให้ UI ดูสมดุล
+     col1, col2 = st.columns([1, 1])
     
-
-    # --- ส่วนการทำนายผลแบบจัดวางตรงกลาง ---
-st.divider()
-st.header("🔮 Model Prediction Testing")
-
-if 'model_mnist' not in locals() or model_mnist is None:
-    st.error("❌ Model not found! Please ensure 'model_mnist_nn.h5' is loaded correctly.")
-else:
-    # สร้างคอลัมน์เพื่อให้ UI ดูสมดุล
-    col1, col2 = st.columns([1, 1])
+     with col1:
+         uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"])
     
-    with col1:
-        uploaded_file = st.file_uploader("📤 Upload a handwritten digit...", type=["png", "jpg", "jpeg"])
-    
-    if uploaded_file is not None:
-        # โหลดรูปภาพ
-        image = Image.open(uploaded_file).convert('L')
+     if uploaded_file is not None:
+         # โหลดรูปภาพ
+         image = Image.open(uploaded_file).convert('L')
         
-        # --- Preprocessing Step ---
-        # 1. ปรับปรุงรูปภาพ: หากเป็นภาพพื้นหลังขาว ตัวเลขดำ ต้อง Invert ให้เป็นพื้นดำ ตัวเลขขาว (แบบ MNIST)
-        img_for_cv = np.array(image)
-        if np.mean(img_for_cv) > 127: # ถ้าค่าเฉลี่ยสีสว่าง (พื้นขาว)
-            image = ImageOps.invert(image)
-            img_for_cv = np.array(image)
+         # --- Preprocessing Step ---
+         # 1. ปรับปรุงรูปภาพ: หากเป็นภาพพื้นหลังขาว ตัวเลขดำ ต้อง Invert ให้เป็นพื้นดำ ตัวเลขขาว (แบบ MNIST)
+         img_for_cv = np.array(image)
+         if np.mean(img_for_cv) > 127: # ถ้าค่าเฉลี่ยสีสว่าง (พื้นขาว)
+             image = ImageOps.invert(image)
+             img_for_cv = np.array(image)
+             
+         # 2. ตรวจสอบการหาตัวเลข (Contour Detection)
+         _, thresh = cv2.threshold(img_for_cv, 100, 255, cv2.THRESH_BINARY)
+         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+         digit_count = sum(1 for c in contours if cv2.contourArea(c) > 20)
 
-        # 2. ตรวจสอบการหาตัวเลข (Contour Detection)
-        _, thresh = cv2.threshold(img_for_cv, 100, 255, cv2.THRESH_BINARY)
-        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        digit_count = sum(1 for c in contours if cv2.contourArea(c) > 20)
-
-        with col2:
-            st.image(image, caption='Processed Image (28x28)', width=150)
+         with col2:
+             st.image(image, caption='Processed Image (28x28)', width=150)
         
-        # แสดงผลลัพธ์การตรวจสอบเบื้องต้น
-        if digit_count > 1:
-            st.error(f"⚠️ Found {digit_count} digits! Please upload only ONE digit at a time.")
-        elif digit_count == 0:
-            st.warning("❓ No digit detected. Try drawing more clearly.")
-        else:
-            # ปุ่มกดยืนยันการวิเคราะห์
-            if st.button("🚀 Analyze Now", use_container_width=True):
-                with st.spinner('AI is thinking...'):
-                    # 3. เตรียมข้อมูลเข้าโมเดล
-                    img_resized = image.resize((28, 28))
-                    img_array = np.array(img_resized)
+         # แสดงผลลัพธ์การตรวจสอบเบื้องต้น
+         if digit_count > 1:
+             st.error(f"⚠️ Found {digit_count} digits! Please upload only ONE digit at a time.")
+         elif digit_count == 0:
+             st.warning("❓ No digit detected. Try drawing more clearly.")
+         else:
+             # ปุ่มกดยืนยันการวิเคราะห์
+             if st.button("🚀 Analyze Now", use_container_width=True):
+                 with st.spinner('AI is thinking...'):
+                     # 3. เตรียมข้อมูลเข้าโมเดล
+                     img_resized = image.resize((28, 28))
+                     img_array = np.array(img_resized)
+                     
+                     # Normalization
+                      img_input = img_array.astype('float32') / 255.0
+                  img_input = img_input.reshape(1, 28, 28, 1) # สำหรับ CNN
+                     
+                     # Predict
+                     prediction = model_mnist.predict(img_input)
+                     result = np.argmax(prediction)
+                     confidence = np.max(prediction) * 100
                     
-                    # Normalization
-                    img_input = img_array.astype('float32') / 255.0
-                    img_input = img_input.reshape(1, 28, 28, 1) # สำหรับ CNN
+                     # --- แสดงผลลัพธ์แบบตัวเลขขนาดใหญ่ ---
+                     st.divider()
                     
-                    # Predict
-                    prediction = model_mnist.predict(img_input)
-                    result = np.argmax(prediction)
-                    confidence = np.max(prediction) * 100
+                     # สร้าง Layout สำหรับแสดงตัวเลขโดดๆ ตรงกลาง
+                     _, center_col, _ = st.columns([1, 2, 1])
                     
-                    # --- แสดงผลลัพธ์แบบตัวเลขขนาดใหญ่ ---
-                    st.divider()
-                    
-                    # สร้าง Layout สำหรับแสดงตัวเลขโดดๆ ตรงกลาง
-                    _, center_col, _ = st.columns([1, 2, 1])
-                    
-                    with center_col:
-                        st.write("<p style='text-align: center; font-size: 20px;'>Predicted Digit</p>", unsafe_allow_html=True)
-                        # แสดงตัวเลขขนาดใหญ่ สีเขียวเน้นความชัดเจน
-                        st.markdown(f"""
-                            <div style="
-                                background-color: #262730; 
-                                border-radius: 10px; 
-                                border: 2px solid #4CAF50;
-                                padding: 20px;
-                                text-align: center;
-                            ">
-                                <h1 style="color: #4CAF50; font-size: 100px; margin: 0;">{result}</h1>
-                            </div>
-                        """, unsafe_allow_html=True)
+                     with center_col:
+                         st.write("<p style='text-align: center; font-size: 20px;'>Predicted Digit</p>", unsafe_allow_html=True)
+                          # แสดงตัวเลขขนาดใหญ่ สีเขียวเน้นความชัดเจน
+                         st.markdown(f"""
+                             <div style="
+                                 background-color: #262730; 
+                                 border-radius: 10px; 
+                                 border: 2px solid #4CAF50;
+                                 padding: 20px;
+                                 text-align: center;
+                             "> 
+                                 <h1 style="color: #4CAF50; font-size: 100px; margin: 0;">{result}</h1>
+                             </div>
+                         """, unsafe_allow_html=True)
                         
-                        # แสดงแถบเปอร์เซ็นต์ความมั่นใจ
-                        st.progress(int(confidence))
-                        st.write(f"<p style='text-align: center;'>Confidence: {confidence:.2f}%</p>", unsafe_allow_html=True)
+                         # แสดงแถบเปอร์เซ็นต์ความมั่นใจ
+                         st.progress(int(confidence))
+                         st.write(f"<p style='text-align: center;'>Confidence: {confidence:.2f}%</p>", unsafe_allow_html=True)
 
-                    if confidence > 80:
-                        st.success("✅ Prediction Successful!")
-                    else:
-                        st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
-        
-
-   
+                     if confidence > 80:
+                         st.success("✅ Prediction Successful!")
+                     else:
+                         st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
