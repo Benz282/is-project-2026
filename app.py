@@ -124,8 +124,8 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
 # --- หน้าทดสอบโมเดล 2 (MNIST) ---
 elif menu == "ทดสอบโมเดล 2 (MNIST)":
     st.header("🧠 ทดสอบโมเดล Neural Network (MNIST)")
-    st.title("📊 Sensor Analytics & Predictive Modeling")
-    st.caption("Project: Ice Skating Compass Data Analysis | Model: Ensemble Voting Regressor")
+    st.title("📊 Traditional ML vs. Neural Networks (MNIST)")
+    st.caption("Project: Digit Recognizer (MNIST) | Model: Ensemble Voting Classifier & CNN")
     
     # 1. ส่วนอธิบายแนวทาง
     with st.expander("📖 Model Development Details (Click to read)", expanded=True):
@@ -152,9 +152,10 @@ elif menu == "ทดสอบโมเดล 2 (MNIST)":
         st.success("🔗 **Source:** [Kaggle: Digit Recognizer (MNIST)](https://www.kaggle.com/c/digit-recognizer/data?select=sample_submission.csv)")
         st.caption("Reference by Kaggle Competition: Digit Recognizer Dataset")
 
-    st.divider()
+    
 
     # --- ส่วนการทำนายผลแบบจัดวางตรงกลาง ---
+st.divider()
 st.header("🔮 Model Prediction Testing")
 
 if 'model_mnist' not in locals() or model_mnist is None:
@@ -238,49 +239,4 @@ else:
                         st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
         
 
-    # สร้างข้อมูลสำหรับตารางสถานะ
-status_data = {
-    "Metric / Feature": [
-        "Algorithm Type",
-        "Data Processing",
-        "Target Accuracy",
-        "Training Speed",
-        "Inference Speed",
-        "Interpretability",
-        "Primary Use Case"
-    ],
-    "Machine Learning (Ensemble)": [
-        "Voting Classifier (RF, SVM, LogReg)",
-        "Flattened 1D (784 features)",
-        "94% - 97%",
-        "Fast (Seconds to Minutes)",
-        "High (Lightweight)",
-        "High (White Box)",
-        "Low-resource / Standard ML"
-    ],
-    "Neural Network (CNN)": [
-        "Convolutional Neural Network",
-        "2D Image (28x28x1)",
-        "98% - 99.7%+",
-        "Slow (Minutes to Hours)",
-        "Moderate (Heavier)",
-        "Low (Black Box)",
-        "High Precision / Real-world OCR"
-    ]
-}
-
-df_status = pd.DataFrame(status_data)
-
-# แสดงผลใน Streamlit
-st.subheader("📊 Model Performance & Status Summary")
-st.table(df_status)
-
-# หรือจะใช้ st.dataframe หากต้องการให้เลื่อนดูได้
-# st.dataframe(df_status, use_container_width=True)
-
-
-
-
-
-
-
+   
