@@ -209,25 +209,25 @@ else:
                 confidence = np.max(prediction) * 100
                     
                     # --- แสดงผลลัพธ์แบบตัวเลขขนาดใหญ่ ---
-                    st.divider()
+                st.divider()
                     
                     # สร้าง Layout สำหรับแสดงตัวเลขโดดๆ ตรงกลาง
-                    _, center_col, _ = st.columns([1, 2, 1])
+                _, center_col, _ = st.columns([1, 2, 1])
                     
-                    with center_col:
-                        st.write("<p style='text-align: center; font-size: 20px;'>Predicted Digit</p>", unsafe_allow_html=True)
+                with center_col:
+                    st.write("<p style='text-align: center; font-size: 20px;'>Predicted Digit</p>", unsafe_allow_html=True)
                         # แสดงตัวเลขขนาดใหญ่ สีเขียวเน้นความชัดเจน
-                        st.markdown(f"""
-                            <div style="
-                                background-color: #262730; 
-                                border-radius: 10px; 
-                                border: 2px solid #4CAF50;
-                                padding: 20px;
-                                text-align: center;
-                            "> 
-                                <h1 style="color: #4CAF50; font-size: 100px; margin: 0;">{result}</h1>
-                            </div>
-                        """, unsafe_allow_html=True)
+                    st.markdown(f"""
+                        <div style="
+                            background-color: #262730; 
+                            border-radius: 10px; 
+                            border: 2px solid #4CAF50;
+                            padding: 20px;
+                            text-align: center;
+                        "> 
+                            <h1 style="color: #4CAF50; font-size: 100px; margin: 0;">{result}</h1>
+                        </div>
+                    """, unsafe_allow_html=True)
                         
                         # แสดงแถบเปอร์เซ็นต์ความมั่นใจ
                         st.progress(int(confidence))
