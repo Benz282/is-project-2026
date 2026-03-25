@@ -23,7 +23,7 @@ model_ice, model_mnist = load_all_models()
 
 # --- เมนูแถบข้าง (Sidebar) ---
 st.sidebar.title("Control Menu")
-menu = st.sidebar.selectbox("เลือกหน้า", ["Homepage", "Model Project1 (Ice)", "Model Project 2 (MNIST)"])
+menu = st.sidebar.selectbox("Select Model", ["Homepage", "Model Project1 (Ice)", "Model Project 2 (MNIST)"])
 
 # --- หน้าแรก ---
 if menu == "Homepage":
