@@ -22,22 +22,25 @@ def load_all_models():
 model_ice, model_mnist = load_all_models()
 
 # --- เมนูแถบข้าง (Sidebar) ---
-st.sidebar.title("เมนูควบคุม")
-menu = st.sidebar.selectbox("เลือกหน้า", ["หน้าแรก", "ทดสอบโมเดล 1 (Ice)", "ทดสอบโมเดล 2 (MNIST)"])
+st.sidebar.title("Control Menu")
+menu = st.sidebar.selectbox("เลือกหน้า", ["Homepage", "Model Project1 (Ice)", "Model Project 2 (MNIST)"])
 
 # --- หน้าแรก ---
-if menu == "หน้าแรก":
-    st.title("🤖 โปรเจค AI - วิชา IS 2568")
-    st.write("ยินดีต้อนรับสู่โปรเจคการพัฒนา Machine Learning และ Neural Network")
+if menu == "Homepage":
+    st.title("🤖 Project AI - Intelligent System 2568 ")
+    st.write(""
+             **Welcome to the ML & Neural Network Development Project.**
+             **By** น.ส.โยษิตา คงธนประเสริฐ 6704062662194 Sec.5
+             "")
     st.markdown("""
-    ### รายละเอียดโปรเจค:
-    - **โมเดล 1:** ทำนายค่าเซนเซอร์ (Ice Dataset) โดยใช้ Ensemble Learning
-    - **โมเดล 2:** จำแนกตัวเลขเขียนมือ (MNIST) โดยใช้ Convolutional Neural Network (CNN)
+    ### Project Scope:
+    - **Model 1:** Sensor Value Prediction on Ice Dataset using Ensemble Learning
+    - **Model 2:** Handwritten Digit Classification (MNIST) using CNN
     """)
-    st.info("💡 กรุณาเลือกเมนูด้านซ้ายเพื่อเริ่มทดสอบ")
+    st.info("💡 Select a menu from the sidebar to begin testing.")
 
 # --- หน้าทดสอบโมเดล 1 (Ice) ---
-elif menu == "ทดสอบโมเดล 1 (Ice)":
+elif menu == "Model Project1 (Ice)":
     st.title("📊 Sensor Analytics & Predictive Modeling")
     st.caption("Project: Ice Skating Compass Data Analysis | Model: Ensemble Voting Regressor")
     
@@ -122,7 +125,7 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
     st.table(pd.DataFrame(data_info))
 
 # --- หน้าทดสอบโมเดล 2 (MNIST) ---
-elif menu == "ทดสอบโมเดล 2 (MNIST)":
+elif menu == "Model Project 2 (MNIST)":
     st.title("📊 Traditional ML vs. Neural Networks (MNIST)")
     st.caption("Project: Digit Recognizer (MNIST) | Model: Ensemble Voting Classifier & CNN")
 
