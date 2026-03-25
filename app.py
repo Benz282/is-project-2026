@@ -123,7 +123,6 @@ elif menu == "ทดสอบโมเดล 1 (Ice)":
 
 # --- หน้าทดสอบโมเดล 2 (MNIST) ---
 elif menu == "ทดสอบโมเดล 2 (MNIST)":
-    st.header("🧠 ทดสอบโมเดล Neural Network (MNIST)")
     st.title("📊 Traditional ML vs. Neural Networks (MNIST)")
     st.caption("Project: Digit Recognizer (MNIST) | Model: Ensemble Voting Classifier & CNN")
 
