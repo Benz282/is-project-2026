@@ -230,10 +230,10 @@ else:
                     """, unsafe_allow_html=True)
                         
                         # แสดงแถบเปอร์เซ็นต์ความมั่นใจ
-                        st.progress(int(confidence))
-                        st.write(f"<p style='text-align: center;'>Confidence: {confidence:.2f}%</p>", unsafe_allow_html=True)
+                    st.progress(int(confidence))
+                    st.write(f"<p style='text-align: center;'>Confidence: {confidence:.2f}%</p>", unsafe_allow_html=True)
 
-                    if confidence > 80:
-                        st.success("✅ Prediction Successful!")
-                    else:
-                        st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
+                if confidence > 80:
+                    st.success("✅ Prediction Successful!")
+                else:
+                    st.warning("⚠️ Low Confidence - The handwriting might be unclear.")
